@@ -1,0 +1,1728 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR"><head><meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
+<title>Cadeia de IAs na detecção de oportunidades — ADM0150</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&amp;family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&amp;display=swap" rel="stylesheet"/>
+<style>
+:root{--ink:#1d2a3a;--soft:#4c5a6b;--paper:#f7f8f6;--line:#d5dad3;--cerrado:#2f6b4f;--ipe:#f2c230;--sus:#2f6b4f;--dis:#b5761a;--orf:#a3362a;--sup:#5b4a8a;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--paper);color:var(--ink);font:400 1.05rem/1.65 "Source Serif 4",Georgia,serif}
+header.top{background:var(--cerrado);color:#fff;padding:2.2rem 1.5rem 1.6rem}
+header.top .w{max-width:1180px;margin:0 auto}
+header.top h1{font:800 clamp(1.7rem,4vw,2.6rem)/1.1 Archivo,system-ui,sans-serif;margin:0 0 .5rem;max-width:22ch}
+header.top p{margin:0;opacity:.9;font-family:Archivo,system-ui,sans-serif;font-weight:500}
+.chain{display:flex;gap:.4rem;align-items:center;margin-top:1.2rem;flex-wrap:wrap;font:700 .85rem Archivo,sans-serif}
+.chain span{border:2px solid #fff;padding:.25rem .6rem;border-radius:4px}
+.chain i{font-style:normal;opacity:.8}
+.chain span.last{background:var(--ipe);color:var(--ink);border-color:var(--ipe)}
+.layout{max-width:1180px;margin:0 auto;display:grid;grid-template-columns:230px 1fr;gap:2.5rem;padding:2rem 1.5rem 4rem}
+nav.side{position:sticky;top:calc(1rem + env(safe-area-inset-top,0px));align-self:start;display:flex;flex-direction:column;gap:.15rem;font-family:Archivo,sans-serif}
+nav.side a{color:var(--soft);text-decoration:none;padding:.55rem .7rem;border-left:3px solid transparent;font-weight:500}
+nav.side a .n{display:inline-block;width:1.4rem;color:var(--cerrado);font-weight:800}
+nav.side a:hover{color:var(--ink);background:#eceee9}
+nav.side a.on{color:var(--ink);border-left-color:var(--cerrado);background:#e8ece5;font-weight:700}
+nav.side a:focus-visible,summary:focus-visible{outline:3px solid var(--ipe);outline-offset:2px}
+main{min-width:0}
+.pg{display:none;max-width:78ch} .pg.on{display:block}
+h2{font:800 2rem/1.15 Archivo,sans-serif;margin:0 0 1.2rem}
+h3{font:700 1.3rem/1.3 Archivo,sans-serif;margin:2.2rem 0 .7rem;color:var(--cerrado)}
+h4{font:700 1.08rem/1.3 Archivo,sans-serif;margin:1.8rem 0 .5rem}
+.orig{color:var(--soft);font-style:italic;margin-top:0}
+dl.id{display:grid;grid-template-columns:max-content 1fr;gap:.35rem 1.2rem;margin:0 0 1rem;padding:1rem 1.2rem;background:#fff;border:1px solid var(--line)}
+dl.id dt{font:700 .95rem Archivo,sans-serif;color:var(--soft)} dl.id dd{margin:0}
+.tw{overflow-x:auto;margin:1rem 0;border:1px solid var(--line);background:#fff}
+table{border-collapse:collapse;width:100%;font-size:.95rem;line-height:1.45}
+th{font:700 .88rem Archivo,sans-serif;text-align:left;background:#eceee9;padding:.6rem .7rem;border-bottom:2px solid var(--line);vertical-align:bottom}
+td{padding:.6rem .7rem;border-top:1px solid var(--line);vertical-align:top}
+pre.prompt{background:var(--ink);color:#eef1ee;padding:1.2rem 1.3rem;overflow-x:auto;white-space:pre-wrap;font:400 .86rem/1.55 ui-monospace,Menlo,Consolas,monospace;border-left:6px solid var(--ipe)}
+mark.todo{background:var(--ipe);color:var(--ink);padding:0 .25rem;font:600 .85rem Archivo,sans-serif}
+.tag{display:inline-block;font:700 .8rem Archivo,sans-serif;padding:.1rem .5rem;border-radius:3px;color:#fff;white-space:nowrap}
+.tag.sus{background:var(--sus)} .tag.dis{background:var(--dis)} .tag.orf{background:var(--orf)} .tag.sup{background:var(--sup)}
+ol.refs li{margin-bottom:.5rem}
+details{background:#fff;border:1px solid var(--line);margin:.8rem 0}
+summary{cursor:pointer;padding:.9rem 1.1rem;font:700 1rem Archivo,sans-serif}
+details[open] summary{border-bottom:1px solid var(--line)}
+.annex{padding:.5rem 1.2rem 1.2rem;font-size:.95rem}
+.annex h3,.annex h4,.annex h5,.annex h6,.annex h7{color:var(--ink);font-size:1.05rem}
+.annex a{word-break:break-all}
+footer{text-align:center;color:var(--soft);font:500 .85rem Archivo,sans-serif;padding:0 1rem 2rem}
+@media (max-width:820px){.layout{grid-template-columns:1fr;gap:1rem}
+ nav.side{position:static;flex-direction:row;overflow-x:auto;border-bottom:1px solid var(--line)}
+ nav.side a{white-space:nowrap;border-left:0;border-bottom:3px solid transparent} nav.side a.on{border-bottom-color:var(--cerrado)}}
+@media print{nav.side,header .chain{display:none} .pg{display:block!important;page-break-after:always} details{open:true} .layout{display:block}}
+
+span.filled{background:#eef3ed;padding:0 .12rem;white-space:pre-line} span.filled a{overflow-wrap:anywhere}
+</style></head><body>
+<header class="top"><div class="w">
+<h1>Cadeia de IAs na detecção de oportunidades de negócio</h1>
+<p>Serviços B2B para micro e pequenas empresas no Distrito Federal, horizonte 2026–2030</p>
+<div aria-label="Estrutura da cadeia" class="chain"><span>Prompt-mestre</span><i>→</i><span>IA A</span><span>IA B</span><span>IA C</span><i>→</i><span>Síntese (4ª IA)</span><i>→</i><span class="last">Auditoria</span></div>
+</div></header>
+<div class="layout"><nav aria-label="Seções" class="side"><a data-s="abertura" href="#abertura"><span class="n">1</span>Abertura</a><a data-s="prompt" href="#prompt"><span class="n">2</span>O prompt-mestre</a><a data-s="protocolo" href="#protocolo"><span class="n">3</span>Protocolo de teste</a><a data-s="auditoria" href="#auditoria"><span class="n">4</span>A síntese auditada</a><a data-s="conclusao" href="#conclusao"><span class="n">5</span>Conclusão</a><a data-s="anexos" href="#anexos"><span class="n"></span>Anexos</a></nav><main><section class="pg" id="abertura">
+<h2>Abertura</h2>
+<dl class="id">
+<dt>Estudante</dt><dd><span class="filled">Raissa Clares</span></dd>
+<dt>Matrícula</dt><dd><span class="filled">222034 323</span></dd>
+<dt>Disciplina</dt><dd>ADM0150 Criação de Negócios, Departamento de Administração, Universidade de Brasília</dd>
+<dt>Semestre</dt><dd>2026.2, Profa. Marina Figueiredo Moreira</dd>
+<dt>Atividade</dt><dd>Atividade 2, estudo de caso individual</dd>
+</dl>
+<h3>Objetivo do estudo</h3>
+<p>Construir um prompt de detecção de oportunidades que carregue os instrumentos das Aulas 4, 5 e 6, aplicá-lo sem alteração em três IAs generativas, pedir a uma quarta IA que sintetize as três respostas e, por fim, auditar essa síntese contra as respostas originais e contra fontes primárias.</p>
+<p>Recorte escolhido: serviços técnicos e de apoio prestados a micro e pequenas empresas (B2B) no Distrito Federal, com até R$ 50 mil de capital próprio, 1 a 3 sócios e horizonte 2026–2030.</p>
+<p><span class="filled">Escolhi esse recorte porque é um mercado próximo da minha realidade e, por isso, mais acessível para conversar com potenciais clientes e observar problemas concretos. Espero conseguir colher resultados mais rapidamente, embora essa proximidade não substitua a validação da disposição a pagar.</span></p>
+<h3>A régua analítica</h3>
+<p>Instrumentos incorporados ao prompt-mestre e o motivo de cada escolha.</p>
+<div class="tw"><table class=""><thead><tr><th>Aula</th><th>Instrumento</th><th>Onde entra no prompt</th><th>Por que entrou</th></tr></thead><tbody><tr><td>Aula 4</td><td>Distinção entre tendência e oportunidade</td><td>Bloco 3 e campo 1–2 do formato</td><td><span class="filled">A distinção impede que uma mudança ampla seja tratada automaticamente como negócio: é preciso identificar um cliente, um problema e disposição a pagar.</span></td></tr><tr><td>Aula 4</td><td>As cinco perguntas de triagem</td><td>Bloco 7, campo 3</td><td><span class="filled">As perguntas transformam uma ideia geral em hipóteses verificáveis sobre comprador, intensidade da dor, pagamento, diferenciação e momento de entrada.</span></td></tr><tr><td>Aula 4</td><td>Leitura crítica de dado de mercado</td><td>Bloco 5</td><td><span class="filled">O bloco exige fonte, período, unidade e população para reduzir números soltos e evitar que estimativas sejam apresentadas como fatos.</span></td></tr><tr><td>Aula 5</td><td>Checklist final de Dornelas</td><td>Bloco 4, como filtro de corte</td><td><span class="filled">O checklist funciona como filtro explícito e comparável; a regra de corte evita aprovar ideias sem problema, solução, cliente, canal viável ou janela.</span></td></tr><tr><td>Aula 5</td><td>Os 3Ms</td><td>Bloco 7, campo 4</td><td><span class="filled">Os 3Ms obrigam a avaliar demanda e acesso, estrutura competitiva e economia da operação, em vez de considerar apenas que o serviço parece interessante.</span></td></tr><tr><td>Aula 5</td><td>Critérios de alto e baixo potencial (Timmons)</td><td>Bloco 4, item 4, só os critérios de lógica</td><td><span class="filled">Os critérios qualitativos de Timmons ajudam a avaliar necessidade, mercado, barreiras, capital e equipe sem impor metas de crescimento típicas de capital de risco a uma microempresa.</span></td></tr><tr><td>Aula 6</td><td>Definição de modelo de negócio</td><td>Bloco 3 e Bloco 7, campo 5</td><td><span class="filled">A definição obriga a ligar cliente, valor entregue, receita, custos e investimento, distinguindo a oferta da tendência que a originou.</span></td></tr><tr><td>Aula 6</td><td>Os cinco modelos de negócio na web</td><td>Bloco 7, campo 6</td><td><span class="filled">A classificação ajuda a verificar se a proposta depende de um modelo digital específico ou se a internet é apenas um canal de aquisição e entrega.</span></td></tr><tr><td>Aula 6</td><td>Métrica de atenção versus métrica de negócio</td><td>Bloco 6</td><td><span class="filled">A proibição reduz o risco de confundir visibilidade com viabilidade; a análise deve priorizar receita, custos, margem, equilíbrio e clientes pagantes.</span></td></tr></tbody></table></div>
+<h3>O que ficou de fora</h3>
+<ul>
+<li><strong>Patamares numéricos de Timmons</strong> (crescimento de 30% a 50% ao ano, entre outros). <span class="filled">Os patamares de crescimento típicos de capital de risco não foram usados porque o recorte é uma microempresa financiada com até R$ 50 mil próprios. Aplicá-los como corte poderia eliminar negócios viáveis por não terem perfil de startup escalável; a lógica qualitativa de Timmons foi mantida.</span></li>
+<li><strong>Cinco aspectos de avaliação de Dornelas</strong> (mercado, retorno, vantagem, equipe, compromisso). <span class="filled">O checklist final de Dornelas foi usado como filtro porque é mais operacional para comparar ideias. Os cinco aspectos amplos não foram adicionados como uma segunda régua independente para evitar duplicação; em especial, equipe e compromisso dependem de dados reais sobre os fundadores e sua execução, que os modelos não conseguem observar a partir do prompt.</span></li>
+<li><strong>Regras de brainstorming da Aula 5.</strong> <span class="filled">As regras de brainstorming servem principalmente para gerar e explorar ideias em grupo, não para decidir se uma oportunidade passou por critérios de viabilidade. Como a atividade pedia qualificação e corte, priorizei os instrumentos de avaliação; uma etapa separada de brainstorming poderia anteceder o filtro.</span></li>
+</ul>
+</section><section class="pg" id="prompt">
+<h2>O prompt-mestre</h2>
+<p>O mesmo texto foi colado, sem nenhuma alteração, nas três ferramentas. Abaixo, a justificativa de cada bloco e, em seguida, o prompt na íntegra.</p>
+<div class="tw"><table class=""><thead><tr><th>Bloco</th><th>Instrumento de aula que carrega</th><th>Efeito esperado</th></tr></thead><tbody><tr><td>1. Papel e objetivo</td><td>Tendência vs. oportunidade (Aula 4); "nada é mais perigoso que uma ideia, quando é a única que temos" (Aula 5)</td><td><span class="filled">Delimitar a tarefa deveria reduzir respostas genéricas e orientar as ferramentas a selecionar oportunidades, não apenas listar ideias.</span></td></tr><tr><td>2. Recorte</td><td>Exigência de recorte do enunciado; "negócio que só fecha a conta com o incentivo é frágil" (Aula 4, slide 20); experiência no ramo (Aula 5, slide 7)</td><td><span class="filled">Fixar setor, região, porte, capital e horizonte deveria tornar as respostas comparáveis e excluir modelos incompatíveis com as restrições do caso.</span></td></tr><tr><td>3. Definições</td><td>Tendência vs. oportunidade (Aula 4, slide 4); definição de modelo de negócio (Aula 6, slide 6)</td><td><span class="filled">Definir os três conceitos deveria reduzir confusões entre mudanças de contexto, problemas comercializáveis e lógica de geração de receita.</span></td></tr><tr><td>4. Processo e filtro de corte</td><td>Checklist final de Dornelas como filtro (Aula 5, slide 14); critérios de Timmons só na lógica (Aula 5, slides 11–12)</td><td><span class="filled">Aplicar o mesmo checklist deveria permitir comparar os filtros; limitar Timmons à lógica evita eliminar pequenos negócios por metas inadequadas.</span></td></tr><tr><td>5. Padrão de evidência</td><td>Leitura crítica de dado: todo número tem denominador (Aula 4, slides 5, 16 e 21)</td><td><span class="filled">Exigir fontes e classificação das afirmações deveria tornar os dados auditáveis e separar fatos, estimativas e opiniões.</span></td></tr><tr><td>6. Proibições</td><td>Métrica de atenção vs. métrica de negócio (Aula 6, slide 6)</td><td><span class="filled">Proibir métricas de atenção deveria evitar justificativas baseadas em audiência e direcionar a análise a indicadores econômicos.</span></td></tr><tr><td>7. Formato de saída</td><td>Cinco perguntas de triagem (Aula 4, slide 19); 3Ms (Aula 5, slide 13); cinco modelos web (Aula 6, slide 7)</td><td><span class="filled">Campos fixos deveriam aumentar a comparabilidade entre respostas e revelar lacunas de mercado, modelo, concorrência, validação e evidências.</span></td></tr><tr><td>8. Quantidade e fechamento</td><td>Poucas oportunidades para forçar a seleção (enunciado, Etapa 2); tabela de descartadas e declaração de busca para permitir a auditoria</td><td><span class="filled">O limite de cinco deveria forçar seleção; a lista de descartadas e a declaração de busca deveriam facilitar a revisão do raciocínio e das fontes.</span></td></tr></tbody></table></div>
+<h3>Texto integral</h3>
+<pre class="prompt">Responda em português do Brasil. Não escreva introdução nem conclusão genérica.
+
+[BLOCO 1 — PAPEL E OBJETIVO]
+Você é um analista de oportunidades de negócio. Sua tarefa é detectar e qualificar oportunidades de negócio no mercado brasileiro para o horizonte 2026–2030, dentro do recorte abaixo. Você não deve listar ideias: deve submetê-las a critérios e entregar apenas as que sobreviverem.
+
+[BLOCO 2 — RECORTE]
+- Setor: serviços técnicos e de apoio prestados a micro e pequenas empresas (B2B).
+- Região: Distrito Federal (clientes e operação).
+- Porte: microempresa, 1 a 3 sócios, sem investidor externo.
+- Capital inicial: até R$ 50 mil, recursos próprios.
+- Horizonte: abertura em 2027, avaliação até 2030.
+- Excluir: negócios que dependam de desenvolver tecnologia proprietária complexa, de licença regulatória demorada, ou de incentivo fiscal para fechar a conta.
+
+[BLOCO 3 — DEFINIÇÕES OBRIGATÓRIAS]
+- TENDÊNCIA é uma direção geral observável, sem dono, sem preço e sem cliente.
+- OPORTUNIDADE é um problema concreto, de um cliente identificável, que ele quer resolver a ponto de pagar, e que um novo negócio consegue resolver melhor do que quem já tenta.
+- MODELO DE NEGÓCIO descreve como a empresa gerará receita e quais são os custos e investimentos necessários para isso.
+Toda oportunidade deve nascer de uma tendência, mas nenhuma tendência pode ser apresentada como oportunidade.
+
+[BLOCO 4 — PROCESSO E FILTRO DE CORTE]
+1. Gere uma lista ampla de até 15 ideias dentro do recorte, uma linha cada.
+2. Submeta cada ideia ao checklist final de Dornelas, respondendo SIM, NÃO ou INCERTO:
+   (a) Existe um problema a ser resolvido?
+   (b) Existe um produto ou serviço que solucionará esse problema?
+   (c) É possível identificar com clareza os potenciais clientes?
+   (d) Será possível implantar uma estratégia de marketing e vendas exequível, em custo e retorno?
+   (e) A janela da oportunidade está aberta?
+3. Qualquer ideia com uma resposta NÃO é descartada. Ideias com INCERTO só seguem se você explicar o que falta saber.
+4. Para os critérios de alto e baixo potencial (Timmons), use apenas os critérios de lógica: necessidades do cliente, estrutura do mercado, barreiras de entrada, capital inicial e equipe. NÃO use os patamares numéricos de capital de risco (ex.: crescimento de 30% a 50% ao ano) como corte, porque eles não se aplicam a pequeno negócio.
+
+[BLOCO 5 — PADRÃO DE EVIDÊNCIA]
+- Todo número deve vir com: valor, unidade, o que exatamente está sendo medido, fonte (instituição e nome da publicação) e ano ou período de referência. Indique se o valor é nominal ou real e se é do Brasil ou do DF.
+- Fontes aceitas: IBGE, Banco Central, SEBRAE, ministérios, Receita Federal, agências reguladoras, associações setoriais identificadas e legislação.
+- Não são aceitos: "estudos indicam", blogs, conteúdo sem autor ou sem data.
+- Se não houver dado confiável, escreva "SEM DADO VERIFICÁVEL". Não estime, não arredonde e não invente fonte.
+- Estimativa própria só é permitida se marcada como "ESTIMATIVA PRÓPRIA" e com o cálculo mostrado.
+- Marque cada afirmação relevante como [FATO] (com fonte), [ESTIMATIVA] ou [OPINIÃO].
+
+[BLOCO 6 — PROIBIÇÕES]
+- É proibido justificar o potencial de uma oportunidade por audiência, seguidores, downloads, visualizações ou qualquer métrica de atenção. Use somente métricas de negócio: receita, custo, margem, ponto de equilíbrio, número de clientes pagantes.
+- Não apresente tendência como oportunidade.
+
+[BLOCO 7 — FORMATO DE SAÍDA, CAMPOS FIXOS]
+Para cada oportunidade aprovada, use exatamente estes campos, nesta ordem:
+
+O[nº] — Nome curto
+1. Tendência de origem (1 a 2 frases)
+2. Oportunidade: problema específico e cliente nomeável (tipo de empresa, porte, localização no DF, quem decide a compra)
+3. Cinco perguntas de triagem:
+   Q1. Quem exatamente tem esse problema?
+   Q2. Quanto dói? (custo em dinheiro, tempo ou risco)
+   Q3. Quem paga, e com que dinheiro?
+   Q4. Por que você, e não o incumbente? (poderia ser copiado em três meses?)
+   Q5. Por que agora, e não em 2020 ou 2035? (qual mudança recente abriu a janela)
+4. 3Ms:
+   - Demanda de mercado: audiência-alvo, acesso pelos canais, recuperação do custo de captação em menos de um ano
+   - Tamanho e estrutura: número de clientes potenciais no DF, concorrentes-chave, fragmentação, barreiras de entrada, estágio do ciclo de vida
+   - Análise de margem: margem bruta possível, investimento inicial, ponto de equilíbrio, cadeia de valor
+5. Modelo de negócio: quem paga, por que paga, a que custo
+6. Enquadramento nos cinco modelos de negócio na web (intermediação, propaganda, mercado virtual, empresarial, redes sociais), ou justificativa de por que não se enquadra
+7. Checklist final de Dornelas: as cinco respostas
+8. Hipótese crítica e teste mais barato para validá-la: o teste, o custo, o prazo e o critério objetivo de sucesso
+9. O que pode não acontecer: principal condição que pode falhar
+10. Fontes: lista numerada e completa
+11. Nível de confiança (alto, médio ou baixo), com justificativa
+
+[BLOCO 8 — QUANTIDADE E FECHAMENTO]
+- Entregue no máximo 5 oportunidades aprovadas. Se menos passarem no filtro, entregue menos e diga isso. Não complete a lista.
+- Ao final, inclua:
+  (a) uma tabela das ideias descartadas, com a pergunta do checklist em que cada uma falhou;
+  (b) um ranking das aprovadas, com uma linha de justificativa cada;
+  (c) uma declaração dizendo se você usou busca na web nesta resposta e qual é sua data de corte de conhecimento.</pre>
+</section><section class="pg" id="protocolo">
+<h2>Protocolo de teste</h2>
+<p>Regra seguida: mesmo prompt, chat novo, primeira resposta registrada, nenhuma interação posterior. As respostas foram identificadas como A, B e C para que a quarta IA não soubesse qual ferramenta produziu cada uma.</p>
+<div class="tw"><table class=""><thead><tr><th>Resposta</th><th>Ferramenta</th><th>Versão do modelo</th><th>Data e hora</th><th>Busca na web</th><th>Observações</th></tr></thead><tbody><tr><td>A</td><td><span class="filled">DeepSeek</span></td><td><span class="filled">Versão/modelo não identificado no PDF exportado; confirmar na interface utilizada.</span></td><td><span class="filled">10/10/2026, às 11h, conforme informado pela estudante. O PDF foi exportado/registrado às 12:59.</span></td><td><span class="filled">Sim, conforme informado pela estudante; o PDF mostra resultados de pesquisa na web.</span></td><td><span class="filled">Pesquisa com resultados web; o PDF registra “Encontrados 20 resultados” e lista seis oportunidades.</span></td></tr><tr><td>B</td><td><span class="filled">Gemini</span></td><td><span class="filled">Versão/modelo não identificado no PDF exportado; confirmar na interface utilizada.</span></td><td><span class="filled">10/10/2026, às 11h, conforme informado pela estudante. O PDF foi exportado/registrado às 13:00.</span></td><td><span class="filled">Sim, conforme informado pela estudante; o PDF anexado, porém, não contém o texto da resposta final.</span></td><td><span class="filled">O PDF contém o prompt e mensagens de que a pesquisa foi concluída, mas não preserva o conteúdo pesquisado; a saída original precisa ser anexada para auditoria.</span></td></tr><tr><td>C</td><td><span class="filled">ChatGPT</span></td><td><span class="filled">Versão/modelo não identificada no PDF exportado; confirmar na interface utilizada.</span></td><td><span class="filled">10/10/2026, às 11h, conforme informado pela estudante. O PDF foi exportado/registrado às 12:59.</span></td><td><span class="filled">Sim, conforme informado pela estudante; a resposta contém referências a fontes e busca.</span></td><td><span class="filled">O PDF contém uma análise extensa com três oportunidades desenvolvidas, mas a versão exata do modelo não aparece no documento.</span></td></tr><tr><td>Síntese (4ª IA)</td><td><span class="filled">Ferramenta da quarta IA não informada; confirmar.</span></td><td><span class="filled">Versão/modelo não informada; confirmar.</span></td><td><span class="filled">Data/hora não verificável pelo arquivo fornecido; confirmar na interface ou no histórico.</span></td><td>Não (desligada de propósito)</td><td>Chat anônimo, sem contexto prévio</td></tr></tbody></table></div>
+<h3>O prompt de síntese</h3>
+<p>A quarta IA recebeu as três respostas e o texto abaixo. <span class="filled">As regras buscavam impedir afirmações sem origem (órfãs), manter atribuição explícita, preservar números e níveis de certeza e expor divergências em vez de apagá-las. A busca foi desligada para que a quarta IA apenas consolidasse o material recebido, sem introduzir fontes ou informações novas; isso, por si só, não garante fidelidade, por isso a auditoria continua necessária.</span></p>
+<pre class="prompt">Você vai receber três respostas (A, B e C) produzidas por três ferramentas diferentes a partir do mesmo prompt, que pedia oportunidades de negócio B2B no Distrito Federal para 2026–2030. Sua tarefa é exclusivamente SINTETIZAR essas três respostas em um panorama único. Você não é analista nesta tarefa: é um compilador rastreável.
+
+[REGRA 1 — NADA DE NOVO]
+É proibido acrescentar qualquer informação que não esteja nas três respostas: nenhum número, fonte, lei, exemplo, opinião ou recomendação próprios. Não use busca na web nem seu conhecimento prévio. Se perceber um erro ou uma inconsistência em alguma resposta, não corrija: registre como "INCONSISTÊNCIA NA ORIGEM", dizendo onde está.
+
+[REGRA 2 — ATRIBUIÇÃO OBRIGATÓRIA]
+Toda afirmação deve terminar com a marcação da origem: [A], [B], [C], ou combinações como [A,B]. Se precisar escrever uma frase de ligação que não venha de nenhuma resposta, marque-a com [SÍNTESE].
+
+[REGRA 3 — FIDELIDADE]
+- Copie números, datas, valores e nomes de normas exatamente como aparecem na origem, com a fonte que a origem citou.
+- Preserve o grau de certeza original: se a origem marcou [ESTIMATIVA], [OPINIÃO], INCERTO ou confiança baixa, mantenha. Não transforme hipótese em fato.
+- Quando duas respostas trazem números diferentes para a mesma coisa, apresente os dois lado a lado. Não escolha, não faça média.
+
+[REGRA 4 — DIVERGÊNCIA NÃO É RUÍDO]
+Não busque consenso. Se uma resposta aprovou uma ideia e outra a descartou, ou se elas discordam sobre problema, cliente, margem, janela ou confiança, isso deve aparecer explicitamente na seção de divergências.
+
+[FORMATO DE SAÍDA — use exatamente estas seções]
+
+1. Inventário completo de oportunidades
+Tabela com TODAS as oportunidades e ideias citadas nas três respostas, inclusive as que aparecem em uma só e as descartadas. Colunas: oportunidade | status em A | status em B | status em C. Use "aprovada", "descartada" ou "ausente" em cada coluna de status.
+
+2. Convergências
+Afirmações presentes em duas ou três respostas, com a origem marcada.
+
+3. Divergências
+Para cada divergência: o tema, o que cada resposta disse e a origem. Inclua divergências de status (aprovada em uma, descartada em outra), de números, de nível de confiança e de interpretação.
+
+4. Afirmações exclusivas
+O que só uma resposta trouxe e é relevante, organizado por resposta.
+
+5. Lacunas e desvios de formato
+Campos que o prompt original exigia e que alguma resposta não entregou (por exemplo: checklist de Dornelas, cinco perguntas de triagem, tabela de descartadas, declaração de busca na web, fontes), e afirmações marcadas como "SEM DADO VERIFICÁVEL".
+
+6. Panorama consolidado
+Ordene as oportunidades apenas por critérios contáveis: em quantas respostas aparecem como aprovadas e o nível de confiança declarado em cada uma. Não acrescente julgamento próprio de mérito.
+
+7. Autodeclaração
+Liste todas as frases marcadas [SÍNTESE] e qualquer outro ponto em que você precisou interpretar, resumir com perda ou escolher entre versões.
+
+Não há limite de extensão: prefira completude a concisão.
+
+As três respostas seguem abaixo (ou em anexo), identificadas como A, B e C.</pre>
+</section><section class="pg" id="auditoria">
+<h2>A síntese auditada</h2>
+<h3>5.1 Auditoria de rastreabilidade</h3>
+<p>Classificação: <span class="tag sus">sustentada</span> <span class="tag dis">distorcida</span> <span class="tag orf">órfã</span> <span class="tag sup">suprimida</span></p>
+<div class="tw"><table class=""><thead><tr><th>#</th><th>Afirmação da síntese (seção)</th><th>Aparece em</th><th>Fidelidade</th><th>Comentário</th></tr></thead><tbody><tr><td>1</td><td>Reforma Tributária com efeitos a partir de 2027 [A,B,C] (2.2)</td><td><span class="filled">A (DeepSeek), C (ChatGPT); B não verificável no PDF enviado</span></td><td><span class="filled">distorcida / atribuição não comprovada</span></td><td><span class="filled">Observei que A (DeepSeek) trata da Reforma Tributária e do horizonte 2027–2030, e que C (ChatGPT) descreve a transição e a NFS-e. Como o PDF B (Gemini) não traz a resposta final, só consigo confirmar a parte A e C da marca [A,B,C]. Também separo a obrigação de usar a NFS-e nacional (novembro de 2026) dos efeitos de IBS/CBS (janeiro de 2027).</span></td></tr><tr><td>2</td><td>Status "aprovada*" para as três oportunidades de A (seções 1 e 6.1)</td><td><span class="filled">A síntese diz que A tem três oportunidades, mas o PDF A (DeepSeek) traz seis propostas; o PDF C (ChatGPT) desenvolve três. A saída de B e o texto completo da síntese não estão nos anexos.</span></td><td><span class="filled">distorcida / atribuição não comprovada</span></td><td><span class="filled">Não consegui confirmar o status 'aprovada*' nem a atribuição da seção. A síntese diz que A tem três oportunidades, mas o PDF A (DeepSeek) lista seis. Isso sugere troca de rótulos ou versões diferentes dos arquivos.</span></td></tr><tr><td>3</td><td>62,7% de serviços entre MEIs e MEs do DF (3.7)</td><td><span class="filled">A (DeepSeek); B e C não verificáveis para essa afirmação nos PDFs</span></td><td><span class="filled">sustentada em A; não confirmada como convergência</span></td><td><span class="filled">Encontrei no PDF DeepSeek o dado de 62,7% dos MEIs e MEs com CNPJ ativo no 4º trimestre de 2025 no setor de serviços. O número não aparece nos PDFs ChatGPT e Gemini. Isso mostra que A citou o número, mas não confirma o dado na fonte de origem.</span></td></tr><tr><td>4</td><td>Preço de B-O2 registrado como inconsistência (R$ 79 vs. R$ 99) (5.4)</td><td><span class="filled">B-O2 e os valores R$ 79/R$ 99 não aparecem nos PDFs fornecidos</span></td><td><span class="filled">órfã / não auditável com os anexos atuais</span></td><td><span class="filled">Não localizei B-O2 nem os preços R$ 79 e R$ 99 nos três PDFs. O PDF do Gemini não traz a resposta final, e o texto completo da síntese não está anexado. Para verificar a divergência, preciso da resposta B e da síntese original.</span></td></tr><tr><td>5</td><td>BPO financeiro sem mudança regulatória recente [A,B] (2.4)</td><td><span class="filled">C (ChatGPT) menciona BPO financeiro; A e B não confirmáveis para a comparação</span></td><td><span class="filled">parcialmente sustentada; atribuição A/B não comprovada</span></td><td><span class="filled">O PDF ChatGPT inclui BPO financeiro entre as oportunidades. A afirmação de que não houve mudança regulatória recente é uma interpretação comparativa, e não consigo atribuí-la a A e B com os arquivos que tenho. O PDF DeepSeek não traz BPO financeiro entre suas seis propostas.</span></td></tr><tr><td>6</td><td>Lacuna dos contadores [B,C] (2.2)</td><td><span class="filled">C (ChatGPT) traz discussão sobre contadores; B não verificável</span></td><td><span class="filled">parcialmente sustentada; convergência não demonstrada</span></td><td><span class="filled">A resposta ChatGPT trata do papel de contadores e fornecedores como incumbentes ou parceiros em temas fiscais. Como o PDF Gemini não guarda a resposta final, não consigo confirmar a marca [B,C]. Preciso anexar a resposta completa de B.</span></td></tr><tr><td>7</td><td>12 GW em pedidos de conexão e US$ 100 milhões por GW (4.3)</td><td><span class="filled">A (DeepSeek); B e C não verificáveis para os valores</span></td><td><span class="filled">sustentada em A; convergência não demonstrada</span></td><td><span class="filled">O PDF DeepSeek cita 12 GW em pedidos de conexão, 8 GW com parecer de viabilidade, mais de 2 GW com contratos de transmissão e cerca de US$ 100 milhões por GW. Esses números não aparecem nos PDFs ChatGPT e Gemini. Confirmei que o dado está na resposta A, mas não o validei na fonte primária.</span></td></tr><tr><td>8</td><td>LC 216/2025 com devolução de até 3% (3.15 e 4.3)</td><td><span class="filled">A (DeepSeek); B e C não verificáveis para a alegação específica</span></td><td><span class="filled">parcialmente sustentada; generalização precisa de ressalva</span></td><td><span class="filled">O PDF DeepSeek menciona a LC 216/2025 e a devolução de até 3%, mas também fala da revisão do Reintegra em 2027. A legislação citada limita o benefício de 3% do Reintegra ao período de 1º/08/2025 a 31/12/2026. Por isso, não estendo a regra até 2030 nem a serviços exportados.</span></td></tr><tr><td>9</td><td>NR-1 em vigor em 26/05/2026 (3.3 e 4.1)</td><td><span class="filled">C (ChatGPT); A e B não verificáveis para essa afirmação</span></td><td><span class="filled">sustentada em C; convergência não demonstrada</span></td><td><span class="filled">O PDF ChatGPT afirma que a nova redação da NR-1 entrou em vigor em 26/05/2026 e trata de riscos psicossociais. O PDF DeepSeek não menciona a NR-1, e o PDF Gemini não traz a resposta final. Assim, a convergência não está comprovada.</span></td></tr><tr><td>10</td><td>Tema T1 aprovado nas três respostas (6.2)</td><td><span class="filled">Não identificável nos três PDFs fornecidos</span></td><td><span class="filled">órfã / não verificável</span></td><td><span class="filled">Não localizei a expressão “Tema T1” nos PDFs DeepSeek, Gemini ou ChatGPT. Sem o texto completo da síntese e a resposta B, não tenho base para confirmar que o tema foi aprovado nas três respostas.</span></td></tr><tr><td>11</td><td>Ranking com B-O1 e B-O2 no topo por confiança ALTA (6.1)</td><td><span class="filled">Não identificável nos três PDFs fornecidos</span></td><td><span class="filled">órfã / não verificável</span></td><td><span class="filled">Os rótulos B-O1 e B-O2 e o ranking por confiança alta não aparecem nos PDFs. A resposta Gemini, que identifiquei como B, não traz a saída final, por isso não consigo verificar o ranking nem os níveis de confiança.</span></td></tr><tr><td>12</td><td>Casos de MPEs do DF exportadoras com apoio da ApexBrasil (presente em C, ausente na síntese)</td><td><span class="filled">A (DeepSeek), não C (Gemini, cujo resultado final não consta)</span></td><td><span class="filled">distorcida quanto à origem indicada; conteúdo parcialmente sustentado</span></td><td><span class="filled">O PDF DeepSeek menciona pequenas empresas do DF que passaram a exportar com apoio da ApexBrasil. O PDF Gemini não traz a resposta final. Por isso, o registro “presente em C” não se sustenta nos anexos: a evidência que encontrei está em A (DeepSeek). Só consigo confirmar a ausência na síntese com o texto completo dela.</span></td></tr></tbody></table></div>
+<h3>Leitura geral da auditoria</h3>
+<p>O principal problema que encontrei não é a falta de rastreabilidade formal, mas o risco de transformar avaliações diferentes em uma seleção que parece consenso.</p>
+<p>Na minha leitura preliminar, a síntese dizia que A avaliou três oportunidades, B aprovou três e C apresentou seis. Essa distribuição não corresponde aos PDFs que anexei, segundo a identificação que fiz: A (DeepSeek) traz seis propostas, C (ChatGPT) desenvolve três e B (Gemini) não contém o texto da resposta final. Por isso, a contagem e os status da síntese ficam pendentes até que eu confira os arquivos originais corretos.</p>
+<p>Duas respostas tratarem do mesmo tema não significa que chegaram à mesma conclusão. Também não leio ausência como rejeição: se uma oportunidade não aparece em uma resposta, isso só significa que ela não foi apresentada ali.</p>
+<p>A seleção final de três oportunidades também não é validação de mercado. O próprio relatório A reconhece que faltam evidências sobre disposição a pagar, aquisição de clientes, retenção e margem real. Mantenho esses limites visíveis na conclusão.</p>
+<h3>5.2 Verificação em fontes primárias</h3>
+<p>Selecionei seis afirmações factuais. Na classificação abaixo, separo a confirmação da norma ou do dado da confirmação de que existe uma oportunidade comercial.</p>
+<div class="tw"><table class=""><thead><tr><th>Afirmação verificada</th><th>Resultado</th><th>Confronto com a fonte primária</th></tr></thead><tbody><tr><td>1. A NFS-e nacional será obrigatória para ME e EPP do Simples Nacional a partir de 1º de novembro de 2026.</td><td><span class="tag sus">Confirmada</span></td><td>Verifiquei que a Receita Federal publicou, em 14 de agosto de 2026, a orientação baseada na Resolução CGSN nº 191/2026. A mesma publicação informa que as regras de IBS e CBS para os optantes do Simples valem a partir de 1º de janeiro de 2027. A síntese acerta a data, mas precisa separar a obrigação de usar o emissor nacional dos efeitos tributários de 2027.</td></tr><tr><td>2. A nova redação do capítulo 1.5 da NR-1 entrou em vigor em 26 de maio de 2026 e incluiu riscos psicossociais no gerenciamento de riscos ocupacionais.</td><td><span class="tag sus">Confirmada</span></td><td>Confirmei na página oficial do Ministério do Trabalho e Emprego a vigência nessa data, após a prorrogação feita pela Portaria MTE nº 765, de 15 de maio de 2025. O MTE também disponibilizou em 2026 o Manual de Interpretação e Aplicação do Capítulo 1.5 da NR-1. Isso confirma a mudança na norma, mas não mostra demanda pagante por uma consultoria independente.</td></tr><tr><td>3. Os MEIs serão obrigados a emitir nota fiscal em todas as operações com pessoas físicas a partir de 2027.</td><td><span class="tag orf">Não confirmada</span></td><td>A resposta B apresenta essa obrigação como universal. Porém, a publicação da Receita Federal sobre o Decreto nº 13.075, de 21 de julho de 2026, trata de pessoas físicas contribuintes ou responsáveis tributários da CBS e de produtores rurais pessoas físicas. Ela não cria, por si só, uma obrigação para todos os MEIs em todas as operações. Considero a afirmação de B ampla demais para sustentar o modelo de negócio sem uma norma específica que a confirme.</td></tr><tr><td>4. A LC nº 216/2025 garante devolução de 3% do valor exportado a pequenos negócios durante todo o horizonte de 2027 a 2030.</td><td><span class="tag dis">Não confirmada na forma apresentada</span></td><td>A Lei Complementar nº 216, de 28 de julho de 2025, criou o Programa Acredita Exportação. O Decreto nº 12.565, de 28 de julho de 2025, fixou a alíquota de 3% para MEIs, MEs e EPPs de 1º de agosto de 2025 a 31 de dezembro de 2026, com revisão do Reintegra para esses portes em 2027. A legislação trata da devolução de resíduo tributário na cadeia de produção de bens exportados. Por isso, concluo que a regra não sustenta, sozinha, uma oportunidade de exportação de serviços nem um benefício garantido até 2030.</td></tr><tr><td>5. O IBGE disponibiliza dados do CEMPRE 2024 por atividade econômica, porte e distribuição geográfica.</td><td><span class="tag sus">Confirmada</span></td><td>O IBGE informa que as Estatísticas do Cadastro Central de Empresas 2024 abrangem empresas e outras organizações formais ativas, com dados por CNAE, porte e distribuição geográfica. A fonte pode servir para dimensionar parte do universo empresarial do DF, mas exige tabulação própria. Ter a base não é o mesmo que ter apurado quantas empresas contratariam cada serviço.</td></tr><tr><td>6. O DF possui 210.405 MEIs ativos e 62,7% dos pequenos negócios com CNPJ ativo são de serviços.</td><td><span class="tag sup">Não foi possível verificar integralmente</span></td><td>Os números aparecem nas respostas B e C, respectivamente, mas não localizei uma tabela primária que confirme esses valores com a mesma data de referência e a mesma definição de população. A contagem de MEIs precisa ser conferida nas estatísticas oficiais do Simples Nacional/Receita Federal; o percentual de 62,7% exige a publicação original do Sebrae ou da entidade que fez a pesquisa. Até lá, trato esses números como dados informados pelas fontes originais, e não como fatos que verifiquei.</td></tr></tbody></table></div>
+<h4>Referências completas das fontes primárias</h4>
+<ol class="refs">
+<li>Receita Federal do Brasil. Simples Nacional: NFS-e Nacional será obrigatória para ME e EPP a partir de 1º de novembro de 2026. Publicado em 14 ago. 2026. Disponível em: gov.br/Receita Federal. <span class="filled">https://www.gov.br/receitafederal/pt-br/assuntos/noticias/2026/agosto/simples-nacional-nfs-e-nacional-sera-obrigatoria-para-me-e-epp-a-partir-de-1o-de-novembro-de-2026 — acesso em 10 out. 2026.</span></li>
+<li>Ministério do Trabalho e Emprego. Norma Regulamentadora nº 1 — Disposições Gerais e Gerenciamento de Riscos Ocupacionais. Página oficial com o texto vigente e o histórico de alterações. Disponível em: gov.br/MTE — NR-1. <span class="filled">https://www.gov.br/trabalho-e-emprego/pt-br/acesso-a-informacao/participacao-social/conselhos-e-orgaos-colegiados/comissao-tripartite-partitaria-permanente/normas-regulamentadora/normas-regulamentadoras-vigentes/nr-1 — acesso em 10 out. 2026.</span></li>
+<li>Brasil. Decreto nº 13.075, de 21 de julho de 2026. Dispõe sobre a prorrogação da obrigatoriedade de inscrição no CNPJ e emissão de documentos fiscais por determinadas pessoas físicas contribuintes da CBS. Publicação oficial da Receita Federal: gov.br/Receita Federal. <span class="filled">https://www.gov.br/receitafederal/pt-br/assuntos/noticias/emissao-do-cnpj-e-de-documentos-fiscais-por-pessoas-fisicas-contribuintes-da-cbs-comecara-em-1o-de-janeiro-de-2027 — acesso em 10 out. 2026.</span></li>
+<li>Brasil. Lei Complementar nº 216, de 28 de julho de 2025. Institui o Programa Acredita Exportação e altera normas relativas à devolução de resíduos tributários e a regimes aduaneiros especiais. Disponível em: Planalto — LC nº 216/2025. <span class="filled">https://www.planalto.gov.br/ccivil_03/leis/lcp/lcp216.htm — acesso em 10 out. 2026.</span></li>
+<li>Brasil. Decreto nº 12.565, de 28 de julho de 2025. Altera o Decreto nº 8.415/2015 para elevar a 3% a alíquota do Reintegra em hipóteses de exportação por MEIs, MEs e EPPs. Disponível em: Planalto — Decreto nº 12.565/2025. <span class="filled">https://www.planalto.gov.br/ccivil_03/_ato2023-2026/2025/decreto/d12565.htm — acesso em 10 out. 2026.</span></li>
+<li>Instituto Brasileiro de Geografia e Estatística (IBGE). Estatísticas do Cadastro Central de Empresas — CEMPRE 2024. Disponível em: IBGE — CEMPRE. <span class="filled">https://www.ibge.gov.br/estatisticas/economicas/comercio/9016-cadastro-central-de-empresas.html — acesso em 10 out. 2026.</span></li>
+</ol>
+<p>O principal resultado desta etapa, para mim, é que uma mudança na norma, mesmo comprovada, não comprova sozinha uma oportunidade comercial. Para demonstrar viabilidade, eu ainda precisaria identificar compradores, medir a disposição a pagar, mapear concorrentes e testar contratos reais no Distrito Federal.</p>
+<h3>5.3 Aplicação independente da régua</h3>
+<p>Para não repetir o ranking da síntese, escolhi três oportunidades de origens diferentes e as avaliei por conta própria:</p>
+<ol>
+<li>Consultoria de transição para a Reforma Tributária do Consumo (B e C).</li>
+<li>Assessoria para acesso de pequenas empresas às compras públicas do GDF (C).</li>
+<li>Apoio à gestão de riscos ocupacionais relacionados à NR-1 (A).</li>
+</ol>
+<p>Na escolha, considerei a clareza do problema, a identificação do comprador, a execução com capital limitado e a existência de um motivo para contratar o serviço entre 2027 e 2030. As respostas do checklist abaixo são minha avaliação, não uma cópia das conclusões das IAs.</p>
+<h4>Oportunidade 1 — Consultoria de transição para a Reforma Tributária (IBS/CBS)</h4>
+<p class="orig">Origem: B, oportunidade 1; C, oportunidade 6.</p>
+<p>O serviço consistiria em diagnosticar os impactos da Reforma Tributária, simular preços e margens, revisar contratos e orientar a adaptação dos processos administrativos de pequenas empresas de serviços que vendem para outras empresas.</p>
+<div class="tw"><table class=""><thead><tr><th>Checklist de Dornelas (Aula 5)</th><th>Avaliação independente</th></tr></thead><tbody><tr><td>(a) Existe um problema a ser resolvido?</td><td>Sim. Mudanças tributárias podem exigir revisão de preços, contratos e decisões comerciais.</td></tr><tr><td>(b) Existe um produto ou serviço que soluciona o problema?</td><td>Sim, com condição. A consultoria pode produzir simulações e apoiar decisões, desde que o escopo técnico e as responsabilidades profissionais estejam definidos.</td></tr><tr><td>(c) É possível identificar os potenciais clientes?</td><td>Sim. Pequenas empresas do Simples Nacional que vendem para outras empresas e são afetadas pelas mudanças tributárias formam um segmento identificável.</td></tr><tr><td>(d) É possível implantar marketing e vendas exequíveis, em custo e retorno?</td><td>Incerto. B e C apresentam estimativas de preço, mas não comprovam conversão, disposição a pagar ou custo de aquisição.</td></tr><tr><td>(e) A janela da oportunidade está aberta?</td><td>Em parte. A transição tributária é real, mas a urgência de cada serviço depende do calendário regulatório e da fase de adaptação de cada cliente.</td></tr></tbody></table></div>
+<p><strong>Modelo de negócio: quem paga, por quê e a que custo?</strong></p>
+<ul>
+<li>Quem paga: sócio-administrador ou responsável financeiro de uma pequena empresa B2B.</li>
+<li>Por que paga: para avaliar o impacto sobre margens e preços, reduzir incertezas e tomar decisões comerciais com base em dados.</li>
+<li>A que custo: B estima R$ 2.500 por projeto, e C sugere de R$ 3.000 a R$ 8.000. São estimativas das respostas, não preços médios observados no DF. Os custos incluem horas de especialistas, ferramentas de análise, prospecção e, quando necessário, apoio contábil ou tributário.</li>
+</ul>
+<p><strong>Parecer:</strong> considero a oportunidade plausível, mas não pronta para investimento. Minha principal dúvida é se as pequenas empresas pagarão por uma consultoria estratégica separada do serviço do contador. O tempo também pesa: uma oportunidade baseada em um prazo regulatório pode perder urgência depois que esse prazo passa.</p>
+<h4>Oportunidade 2 — Assessoria para acesso às compras públicas do GDF</h4>
+<p class="orig">Origem: C, oportunidade 1.</p>
+<p>A proposta é ajudar micro e pequenas empresas a interpretar editais, preparar documentos, fazer cadastros, precificar e acompanhar contratos públicos. C também sugere complementar a receita com serviços de conformidade documental para empresas que já fornecem ao GDF.</p>
+<div class="tw"><table class=""><thead><tr><th>Checklist de Dornelas (Aula 5)</th><th>Avaliação independente</th></tr></thead><tbody><tr><td>(a) Existe um problema a ser resolvido?</td><td>Sim, como hipótese. Empresas sem equipe especializada podem ter dificuldade para interpretar editais e organizar documentos. Ainda preciso medir o tamanho do problema no DF.</td></tr><tr><td>(b) Existe um produto ou serviço que soluciona o problema?</td><td>Sim. A assessoria documental e operacional pode reduzir o esforço de preparar e acompanhar propostas.</td></tr><tr><td>(c) É possível identificar os potenciais clientes?</td><td>Sim. MEs e EPPs do DF que querem vender ao GDF, em especial as que não têm equipe própria de licitações, são identificáveis.</td></tr><tr><td>(d) É possível implantar marketing e vendas exequíveis, em custo e retorno?</td><td>Incerto. Dá para prospectar empresas por setor e por histórico em licitações, mas faltam dados de conversão, preço e custo de aquisição.</td></tr><tr><td>(e) A janela da oportunidade está aberta?</td><td>Incerto. A oportunidade depende de editais, dos ciclos de contratação pública e da capacidade de conquistar clientes. Preciso demonstrar que a demanda continua, e não presumir isso.</td></tr></tbody></table></div>
+<p><strong>Modelo de negócio: quem paga, por quê e a que custo?</strong></p>
+<ul>
+<li>Quem paga: a pequena empresa que deseja participar de licitações ou administrar contratos públicos.</li>
+<li>Por que paga: para reduzir o trabalho operacional, preparar a documentação e conseguir disputar oportunidades compatíveis com seu porte.</li>
+<li>A que custo: C propõe honorários por contrato assinado ou mensalidade de acompanhamento, mas não apresenta uma estrutura completa de preços e margens. Os principais custos seriam horas técnicas, conhecimento em compras públicas, prospecção, ferramentas, deslocamentos e acompanhamento documental.</li>
+</ul>
+<p>Um ponto que observei é a possibilidade de oferecer dois serviços complementares: apoio na preparação de propostas e manutenção documental para fornecedores já contratados. Isso poderia reduzir a dependência de novas licitações, mas a recorrência ainda precisa ser comprovada.</p>
+<p><strong>Parecer:</strong> é a proposta que eu priorizaria para um primeiro teste comercial. Ela tem um comprador identificável, um serviço delimitado e a chance de receita complementar depois da contratação pública. Porém, a evidência que reuni não comprova quantas empresas pagariam pelo serviço nem a margem que uma operação pequena conseguiria.</p>
+<h4>Oportunidade 3 — Apoio à gestão de riscos ocupacionais relacionados à NR-1</h4>
+<p class="orig">Origem: A, oportunidade 2.</p>
+<p>A proposta é apoiar empresas com empregados na organização de planos de ação, responsáveis, cronogramas, registros e acompanhamento de medidas preventivas. Avaliações e atividades que exijam habilitação ficam com os profissionais habilitados.</p>
+<div class="tw"><table class=""><thead><tr><th>Checklist de Dornelas (Aula 5)</th><th>Avaliação independente</th></tr></thead><tbody><tr><td>(a) Existe um problema a ser resolvido?</td><td>Sim, como hipótese. Empresas podem ter dificuldade para coordenar ações preventivas e manter evidências organizadas.</td></tr><tr><td>(b) Existe um produto ou serviço que soluciona o problema?</td><td>Sim. Um serviço gerencial de acompanhamento pode organizar tarefas, prazos e responsabilidades sem substituir a atuação técnica de SST.</td></tr><tr><td>(c) É possível identificar os potenciais clientes?</td><td>Sim. Pequenas empresas com empregados, sem estrutura interna para o tema e que precisam coordenar essas ações formam um segmento identificável.</td></tr><tr><td>(d) É possível implantar marketing e vendas exequíveis, em custo e retorno?</td><td>Incerto. Segundo A, a prospecção pode ser direta ou por parceiros de SST, mas não há evidência de conversão, retenção ou demanda adicional.</td></tr><tr><td>(e) A janela da oportunidade está aberta?</td><td>Sim, do ponto de vista regulatório; do ponto de vista comercial, ainda é hipótese. A nova redação da NR-1 entrou em vigor em 26 de maio de 2026, mas isso não prova que as empresas contratarão um prestador adicional em 2027.</td></tr></tbody></table></div>
+<p><strong>Modelo de negócio: quem paga, por quê e a que custo?</strong></p>
+<ul>
+<li>Quem paga: sócio-administrador ou responsável por operações e pessoas de uma pequena empresa com empregados.</li>
+<li>Por que paga: para organizar e acompanhar as medidas preventivas, sem depender só de controles dispersos e de acompanhamento informal.</li>
+<li>A que custo: A estima R$ 3.000 por implantação, com custo variável direto de R$ 1.200 e margem bruta estimada de 60%. São premissas de planejamento, não médias de mercado. O modelo também depende de horas de consultoria, ferramentas, deslocamentos e, quando necessário, parceiros técnicos.</li>
+</ul>
+<p>Observei que a oportunidade exige cuidado com os limites de atuação. Uma microempresa que oferece só coordenação gerencial não deve se apresentar como substituta de uma consultoria de SST, de profissionais habilitados ou de serviços técnicos que o cliente já contrata.</p>
+<p><strong>Parecer:</strong> a proposta merece validação comercial, porque há uma mudança documentada na norma. Minha dúvida central é se as empresas veem valor em contratar uma camada gerencial separada dos prestadores de SST que já as atendem.</p>
+<h4>Comparação final</h4>
+<div class="tw"><table class=""><thead><tr><th>Critério</th><th>Consultoria IBS/CBS</th><th>Compras públicas do GDF</th><th>Apoio à gestão de riscos ocupacionais</th></tr></thead><tbody><tr><td>Problema identificável</td><td>Sim</td><td>Sim, como hipótese</td><td>Sim, como hipótese</td></tr><tr><td>Comprador identificável</td><td>Sim</td><td>Sim</td><td>Sim</td></tr><tr><td>Diferenciação demonstrada</td><td>Parcial</td><td>Especialização proposta, ainda não testada</td><td>Coordenação gerencial, ainda não testada</td></tr><tr><td>Recorrência potencial</td><td>Acompanhamento e revisões</td><td>Manutenção documental e gestão contratual</td><td>Acompanhamento periódico</td></tr><tr><td>Principal risco</td><td>Prazo regulatório, competência técnica e disposição a pagar</td><td>Ciclos de licitação, aquisição de clientes e volume de contratos</td><td>Redundância com serviços de SST existentes e limites de responsabilidade</td></tr><tr><td>Situação atual</td><td>Validar demanda e escopo</td><td>Priorizar teste comercial</td><td>Validar com clientes e parceiros técnicos</td></tr></tbody></table></div>
+</section><section class="pg" id="conclusao">
+<h2>Conclusão</h2>
+<h3>A oportunidade que eu defendo</h3>
+<p>Defendo, por ora, a assessoria para acesso às compras públicas do GDF, mas só para um teste comercial de baixo custo, não para investimento integral.</p>
+<p>Não a escolhi por ter rentabilidade comprovada maior que as outras, e sim por três pontos que observei:</p>
+<ol>
+<li>O comprador é identificável: uma pequena empresa que quer participar de licitações e não tem equipe especializada.</li>
+<li>A proposta pode ser dividida em entregas concretas, como preparação documental, leitura de edital e apoio à precificação.</li>
+<li>É possível somar aos serviços pontuais a manutenção documental e o acompanhamento de contratos, o que reduz a dependência de uma única etapa de venda.</li>
+</ol>
+<p>A principal fragilidade que identifiquei é que C não traz evidência suficiente de disposição a pagar, volume de clientes ou preços praticados. Antes de investir, eu entrevistaria empresas que já tentaram vender ao GDF e apresentaria uma proposta comercial com preço definido.</p>
+<p>No teste, eu mediria contratos pagos, horas de execução por cliente, custo de aquisição e margem real. A continuidade dependeria dos resultados, e não só do interesse declarado nas entrevistas.</p>
+<p>Concluo que nenhuma das três oportunidades está validada o bastante para justificar, agora, o investimento integral do capital disponível. A assessoria para compras públicas seria minha primeira candidata a teste; a consultoria IBS/CBS e o apoio à gestão de riscos ocupacionais seguem como alternativas a validar.</p>
+<p>A análise também me mostrou por que não devo aceitar o ranking final da síntese sem questionar: BPO financeiro, NFS-e e NR-1 são propostas plausíveis, mas a existência de um problema ou de uma mudança na norma não basta para provar que são as melhores oportunidades. Na escolha final, considero a comparação em bases iguais entre as propostas de A, B e C, a verificação dos fatos e, principalmente, evidências comerciais obtidas com compradores reais.</p>
+<h3>O que aprendi sobre encadear IAs</h3>
+<p><span class="filled">Observei que a cadeia manteve o tema geral de serviços B2B no DF e deixou visíveis oportunidades ligadas a mudanças regulatórias, organização operacional e apoio especializado. O erro mais claro que encontrei, com os arquivos que tenho hoje, está na rastreabilidade e na atribuição: a identificação A/B/C usada na leitura geral do relatório não corresponde com segurança aos PDFs anexados, e o PDF do Gemini não traz a resposta final. Por isso, não consigo confirmar várias convergências, status e classificações como consenso entre as três respostas.
+
+Percebi que a regra de ranking por confiança declarada só funciona quando os rótulos e as respostas originais estão disponíveis e podem ser comparados. Não localizei “B-O1”, “B-O2” nem “Tema T1” nos três PDFs, então esses elementos ficam sem auditoria. Eu mudaria o procedimento: salvaria a resposta completa de cada ferramenta, atribuiria os rótulos A/B/C só depois de salvar os arquivos e criaria uma tabela de rastreabilidade por afirmação, com trecho literal, origem, status e fonte primária. Também separaria “apareceu em várias respostas” de “foi aprovada em várias respostas” e de “foi confirmada por fonte primária”.</span></p>
+</section><section class="pg" id="anexos">
+<h2>Anexos</h2>
+<p>As quatro respostas completas, sem edição. Clique em cada uma para abrir.</p>
+<details><summary>Anexo A — resposta da ferramenta A</summary><div class="annex"><h3 id="oportunidades-de-negócio-b2b-no-distrito-federal-20272030"><strong>Oportunidades de negócio B2B no Distrito Federal — 2027–2030</strong></h3>
+<h4 id="lista-ampla-inicial"><strong>1. Lista ampla inicial</strong></h4>
+<p>[OPINIÃO] Foram consideradas hipóteses de serviços técnicos e de apoio que podem ser operados por uma microempresa com recursos próprios, sem tecnologia proprietária complexa e sem depender de incentivos fiscais.</p>
+<table>
+<colgroup>
+<col style="width: 38%"/>
+<col style="width: 61%"/>
+</colgroup>
+<thead>
+<tr class="header">
+<th><strong>Ideia analisada</strong></th>
+<th><strong>Problema que pretende resolver</strong></th>
+</tr>
+<tr class="odd">
+<th>Implantação operacional da NFS-e nacional</th>
+<th>Adaptação de rotinas de faturamento e emissão fiscal</th>
+</tr>
+<tr class="header">
+<th>Apoio à gestão de riscos ocupacionais</th>
+<th>Dificuldade de transformar exigências e avaliações em ações acompanhadas</th>
+</tr>
+<tr class="odd">
+<th>BPO financeiro</th>
+<th>Falta de controle de caixa, conciliação e contas a receber</th>
+</tr>
+<tr class="header">
+<th>Recuperação administrativa de recebíveis</th>
+<th>Atrasos de clientes e ausência de processo de cobrança</th>
+</tr>
+<tr class="odd">
+<th>Organização de processos internos</th>
+<th>Retrabalho e falhas operacionais</th>
+</tr>
+<tr class="header">
+<th>Implantação de CRM</th>
+<th>Perda de oportunidades comerciais</th>
+</tr>
+<tr class="odd">
+<th>Recrutamento terceirizado</th>
+<th>Dificuldade de selecionar profissionais</th>
+</tr>
+<tr class="header">
+<th>Estruturação de cargos e desempenho</th>
+<th>Falta de critérios de gestão de pessoas</th>
+</tr>
+<tr class="odd">
+<th>Adequação à LGPD</th>
+<th>Falta de organização dos processos de privacidade</th>
+</tr>
+<tr class="header">
+<th>Gestão de redes sociais</th>
+<th>Falta de capacidade de marketing</th>
+</tr>
+<tr class="odd">
+<th>Pesquisa de mercado sob demanda</th>
+<th>Decisões comerciais sem informação suficiente</th>
+</tr>
+<tr class="header">
+<th>Implantação de indicadores gerenciais</th>
+<th>Falta de visibilidade do desempenho</th>
+</tr>
+<tr class="odd">
+<th>Treinamentos empresariais</th>
+<th>Lacunas de capacitação</th>
+</tr>
+<tr class="header">
+<th>Intermediação de fornecedores</th>
+<th>Dificuldade de encontrar prestadores confiáveis</th>
+</tr>
+<tr class="odd">
+<th>Organização para obtenção de crédito</th>
+<th>Falta de preparação documental e financeira</th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+<h4 id="evidências-que-fundamentam-a-seleção"><strong>2. Evidências que fundamentam a seleção</strong></h4>
+<p>- [FATO] Mudança fiscal: a Receita Federal publicou, em 14 de agosto de 2026, a obrigatoriedade de utilização do Emissor Nacional da NFS-e por ME e EPP optantes pelo Simples Nacional a partir de 1º de novembro de 2026. O órgão também esclareceu que as disposições relativas a IBS e CBS aplicáveis a esses optantes passam a produzir efeitos a partir de 1º de janeiro de 2027. Fonte: Receita Federal, Simples Nacional: NFS-e Nacional será obrigatória para ME e EPP a partir de 1º de novembro de 2026.</p>
+<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR4XmP4//8/AwAI/AL+GwXmLwAAAABJRU5ErkJggg==" style="width:0.69444in;height:0.69444in"/></p>
+<p>Receita Federal</p>
+<p>+1</p>
+<p>- [FATO] Mudança na gestão de riscos ocupacionais: a nova redação do capítulo de gerenciamento de riscos ocupacionais da NR-1 entrou em vigor em 26 de maio de 2026 e inclui expressamente fatores de risco psicossociais relacionados ao trabalho. Fonte: Ministério do Trabalho e Emprego, Norma Regulamentadora nº 1 e materiais de orientação sobre o GRO/PGR.</p>
+<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR4XmP4//8/AwAI/AL+GwXmLwAAAABJRU5ErkJggg==" style="width:0.69444in;height:0.69444in"/></p>
+<p>Ministério do Trabalho e Emprego</p>
+<p>- [FATO] Necessidade de gestão financeira: o Sebrae publicou, em 15 de agosto de 2026, orientações sobre controles financeiros, fluxo de caixa e administração de pequenos negócios. Isso documenta a relevância do tema, mas não comprova, por si só, demanda pagante por BPO financeiro no DF. Fonte: Sebrae, Como fazer a gestão financeira do pequeno negócio.</p>
+<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR4XmP4//8/AwAI/AL+GwXmLwAAAABJRU5ErkJggg==" style="width:0.69444in;height:0.69444in"/></p>
+<p>Sebrae</p>
+<p>- [FATO] Base para dimensionamento: o IBGE disponibiliza dados do Cadastro Central de Empresas relativos a 2024, com informações por atividade econômica, porte e distribuição geográfica. O número exato de empresas que simultaneamente atendem aos perfis comerciais definidos nesta análise não foi apurado. Fonte: IBGE, Estatísticas do Cadastro Central de Empresas — CEMPRE 2024.</p>
+<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR4XmP4//8/AwAI/AL+GwXmLwAAAABJRU5ErkJggg==" style="width:0.69444in;height:0.69444in"/></p>
+<p>IBGE</p>
+<p>Limite da evidência: as fontes confirmam mudanças regulatórias, a existência de necessidades de gestão e a disponibilidade de estatísticas empresariais. Não comprovam contratos, preços praticados, disposição a pagar ou margens no mercado do Distrito Federal. Esses pontos permanecem hipóteses a testar.</p>
+<h4 id="o1-bpo-financeiro-para-pequenas-empresas"><strong>O1 — BPO financeiro para pequenas empresas</strong></h4>
+<h5 id="tendência-de-origem"><strong>1. Tendência de origem</strong></h5>
+<p>[FATO] A digitalização dos controles empresariais e a necessidade de acompanhar caixa, custos, pagamentos e recebimentos são temas recorrentes nas orientações do Sebrae para pequenos negócios.</p>
+<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR4XmP4//8/AwAI/AL+GwXmLwAAAABJRU5ErkJggg==" style="width:0.69444in;height:0.69444in"/></p>
+<p>Sebrae</p>
+<p>[OPINIÃO] A tendência relevante é a profissionalização da gestão financeira de empresas que ainda dependem diretamente dos sócios para executar tarefas administrativas. A tendência não comprova que essas empresas contratarão um fornecedor externo.</p>
+<h5 id="oportunidade-problema-específico-e-cliente-nomeável"><strong>2. Oportunidade: problema específico e cliente nomeável</strong></h5>
+<p>[ESTIMATIVA] Atender empresas de serviços B2B do Plano Piloto, Águas Claras, Taguatinga e outras regiões do DF que tenham movimentação financeira recorrente, controles fragmentados e ausência de uma rotina confiável de conciliação e previsão de caixa.</p>
+<p>O comprador é o sócio-administrador ou diretor financeiro. Escritórios contábeis podem funcionar como parceiros de indicação, sem que o serviço substitua a contabilidade.</p>
+<p>O escopo inicial seria organizar contas a pagar e receber, conciliar movimentações, preparar previsões de caixa e produzir relatórios gerenciais. Pagamentos e movimentações bancárias permaneceriam sujeitos às autorizações do cliente e a controles de acesso apropriados.</p>
+<h5 id="cinco-perguntas-de-triagem"><strong>3. Cinco perguntas de triagem</strong></h5>
+<p>Q1. Quem exatamente tem esse problema?</p>
+<p>[ESTIMATIVA] Empresas com fluxo financeiro frequente, equipe administrativa pequena e dificuldade de produzir informações confiáveis para decisões dos sócios. O segmento prioritário deve ser identificado por entrevistas com compradores no DF.</p>
+<p>Q2. Quanto dói?</p>
+<p>[ESTIMATIVA] A dor pode ser medida pelas horas mensais gastas pelos sócios em rotinas financeiras, atrasos de recebimentos, multas efetivamente pagas, retrabalho e decisões tomadas sem previsão de caixa.</p>
+<p>Custo médio desse problema no DF: SEM DADO VERIFICÁVEL.</p>
+<p>A validação deve levantar esses valores em cada empresa, sem extrapolar os resultados para todo o mercado.</p>
+<p>Q3. Quem paga, e com que dinheiro?</p>
+<p>[OPINIÃO] O sócio-administrador paga com o caixa operacional quando o serviço custa menos do que a alternativa interna ou oferece melhoria gerencial que justifique a despesa.</p>
+<p>Q4. Por que você, e não o incumbente?</p>
+<p>[OPINIÃO] A proposta deve se diferenciar pela entrega de informações gerenciais utilizáveis, pela rotina de acompanhamento e pela integração com o contador. Apenas lançar movimentações financeiras não constitui uma vantagem competitiva.</p>
+<p>A oferta é copiável em poucos meses. A defesa comercial depende de qualidade, padronização, confiança e retenção.</p>
+<p>Q5. Por que agora, e não em 2020 ou 2035?</p>
+<p>[OPINIÃO] Não foi comprovada uma mudança recente exclusiva que abra a janela para o BPO financeiro. O problema é estrutural, e a oportunidade depende de encontrar um nicho com necessidade atual, orçamento e baixa satisfação com as alternativas disponíveis.</p>
+<p>[FATO] O Sebrae documenta a importância dos controles financeiros, mas não quantifica a demanda pagante por BPO no DF.</p>
+<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR4XmP4//8/AwAI/AL+GwXmLwAAAABJRU5ErkJggg==" style="width:0.69444in;height:0.69444in"/></p>
+<p>Sebrae</p>
+<h5 id="ms"><strong>4. 3Ms</strong></h5>
+<p>Demanda de mercado</p>
+<ul>
+<li><blockquote>
+<p>[ESTIMATIVA] Público-alvo: empresas de serviços B2B com movimentação recorrente e controles financeiros insuficientes.</p>
+</blockquote></li>
+<li><blockquote>
+<p>[OPINIÃO] Canais de acesso: contadores parceiros, associações empresariais, indicações de clientes e prospecção direta.</p>
+</blockquote></li>
+<li><blockquote>
+<p>[ESTIMATIVA] A aquisição de cada cliente deve ser recuperada em menos de um ano. O cálculo deverá considerar despesas comerciais, tempo dos sócios dedicado à venda e receita efetivamente recebida.</p>
+</blockquote></li>
+<li><blockquote>
+<p>[OPINIÃO] Contratos mensais podem proporcionar previsibilidade de receita, mas somente se houver retenção e margem positiva após contabilizar as horas de entrega.</p>
+</blockquote></li>
+</ul>
+<p>Tamanho e estrutura</p>
+<ul>
+<li><blockquote>
+<p>Número de clientes potenciais no DF: SEM DADO VERIFICÁVEL para o perfil específico de empresas com disposição a contratar BPO financeiro.</p>
+</blockquote></li>
+<li><blockquote>
+<p>Concorrentes-chave: empresas de BPO financeiro, profissionais autônomos, escritórios contábeis com serviços gerenciais e softwares financeiros.</p>
+</blockquote></li>
+<li><blockquote>
+<p>[OPINIÃO] A oferta é relativamente fácil de replicar. A concorrência precisa ser mapeada por segmento e preço antes do lançamento.</p>
+</blockquote></li>
+<li><blockquote>
+<p>[OPINIÃO] Barreiras de entrada: baixas a moderadas; confiança, segurança da informação e confiabilidade da execução são fundamentais.</p>
+</blockquote></li>
+<li><blockquote>
+<p>[OPINIÃO] Ciclo de vida: serviço estabelecido, sem janela regulatória exclusiva.</p>
+</blockquote></li>
+</ul>
+<p>Análise de margem</p>
+<p>Todos os valores abaixo são ESTIMATIVA PRÓPRIA, em reais nominais, sem correção pela inflação, e não são médias observadas do mercado.</p>
+<table>
+<colgroup>
+<col style="width: 54%"/>
+<col style="width: 45%"/>
+</colgroup>
+<thead>
+<tr class="header">
+<th><strong>Indicador</strong></th>
+<th><strong>Premissa de planejamento</strong></th>
+</tr>
+<tr class="odd">
+<th>Mensalidade por cliente</th>
+<th>R$ 1.500</th>
+</tr>
+<tr class="header">
+<th>Custo variável mensal por cliente</th>
+<th>R$ 450</th>
+</tr>
+<tr class="odd">
+<th>Margem bruta estimada</th>
+<th>70%</th>
+</tr>
+<tr class="header">
+<th>Investimento inicial</th>
+<th>R$ 25.000</th>
+</tr>
+<tr class="odd">
+<th>Custos fixos mensais</th>
+<th>R$ 5.000</th>
+</tr>
+<tr class="header">
+<th>Ponto de equilíbrio operacional</th>
+<th>5 clientes ativos</th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+<p>Cálculos das estimativas:</p>
+<ul>
+<li><blockquote>
+<p>Margem bruta = (R$ 1.500 − R$ 450) ÷ R$ 1.500 = 70%.</p>
+</blockquote></li>
+<li><blockquote>
+<p>Contribuição mensal por cliente = R$ 1.500 − R$ 450 = R$ 1.050.</p>
+</blockquote></li>
+<li><blockquote>
+<p>Ponto de equilíbrio = R$ 5.000 ÷ R$ 1.050 = 4,76; operacionalmente, são necessários 5 clientes ativos.</p>
+</blockquote></li>
+</ul>
+<p>O cálculo não inclui pró-labore adicional dos sócios, tributos sobre faturamento, despesas financeiras ou custos não previstos. Esses itens devem ser incorporados antes de uma decisão de investimento.</p>
+<p>A cadeia de valor envolve implantação, organização de dados, conciliação, acompanhamento de recebíveis, previsão de caixa e relatórios. A margem depende principalmente das horas de execução por cliente.</p>
+<h5 id="modelo-de-negócio-quem-paga-por-que-paga-a-que-custo"><strong>5. Modelo de negócio: quem paga, por que paga, a que custo</strong></h5>
+<p>[ESTIMATIVA] O cliente paga uma mensalidade definida pelo volume de transações e pela complexidade do processo. A implantação inicial pode ser cobrada separadamente.</p>
+<p>A receita é recorrente. Os custos são horas de trabalho, ferramentas, atendimento, segurança de dados, prospecção e eventuais parceiros.</p>
+<p>[OPINIÃO] O negócio deve iniciar com um escopo padronizado e um segmento relativamente homogêneo. Aceitar qualquer cliente sem recalcular o esforço pode destruir a margem.</p>
+<h5 id="enquadramento-nos-cinco-modelos-de-negócio-na-web"><strong>6. Enquadramento nos cinco modelos de negócio na web</strong></h5>
+<p>[OPINIÃO] Modelo empresarial (B2B). A empresa vende serviços diretamente a outras empresas. A internet é um meio de comunicação e execução, não o núcleo de um mercado virtual ou de uma rede social.</p>
+<h5 id="checklist-final-de-dornelas"><strong>7. Checklist final de Dornelas</strong></h5>
+<table>
+<colgroup>
+<col style="width: 38%"/>
+<col style="width: 61%"/>
+</colgroup>
+<thead>
+<tr class="header">
+<th><strong>Pergunta</strong></th>
+<th><strong>Resposta</strong></th>
+</tr>
+<tr class="odd">
+<th>(a) Existe um problema a ser resolvido?</th>
+<th>SIM — controles financeiros deficientes podem gerar retrabalho e baixa previsibilidade.</th>
+</tr>
+<tr class="header">
+<th>(b) Existe um serviço que solucionará o problema?</th>
+<th>SIM — conciliação, rotina financeira e relatórios gerenciais.</th>
+</tr>
+<tr class="odd">
+<th>(c) É possível identificar os potenciais clientes?</th>
+<th>SIM — empresas de serviços com necessidade operacional verificável.</th>
+</tr>
+<tr class="header">
+<th>(d) É possível implantar marketing e vendas exequíveis?</th>
+<th>INCERTO — faltam dados sobre custo de aquisição, conversão e retenção no DF.</th>
+</tr>
+<tr class="odd">
+<th>(e) A janela da oportunidade está aberta?</th>
+<th>INCERTO — o problema existe, mas falta comprovar uma janela comercial diferenciada para 2027.</th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+<p>Decisão: segue para validação comercial, sem aprovação definitiva para investimento. As incertezas de aquisição e de janela devem ser resolvidas antes da abertura.</p>
+<h5 id="hipótese-crítica-e-teste-mais-barato-para-validá-la"><strong>8. Hipótese crítica e teste mais barato para validá-la</strong></h5>
+<ul>
+<li><blockquote>
+<p>Teste: apresentar uma proposta paga de BPO financeiro a empresas selecionadas e medir o esforço real de execução.</p>
+</blockquote></li>
+<li><blockquote>
+<p>Custo: [ESTIMATIVA PRÓPRIA] até R$ 600, calculados como teto para transporte, materiais e contatos comerciais.</p>
+</blockquote></li>
+<li><blockquote>
+<p>Prazo: [ESTIMATIVA PRÓPRIA] 30 dias.</p>
+</blockquote></li>
+<li><blockquote>
+<p>Critério objetivo: [ESTIMATIVA PRÓPRIA] fechar contratos pagos com pelo menos dois clientes independentes e demonstrar, nos pilotos, que a contribuição mensal por cliente é positiva após os custos variáveis medidos.</p>
+</blockquote></li>
+</ul>
+<h5 id="o-que-pode-não-acontecer"><strong>9. O que pode não acontecer</strong></h5>
+<p>[OPINIÃO] O cliente pode preferir manter a rotina internamente, contratar apenas o contador ou optar por software. O negócio também pode consumir mais horas do que o previsto, inviabilizando a mensalidade proposta.</p>
+<h5 id="fontes"><strong>10. Fontes</strong></h5>
+<ol type="1">
+<li><blockquote>
+<p>Sebrae. Como fazer a gestão financeira do pequeno negócio. Atualizado em 15 de agosto de 2026. <a href="https://meuatendimento.sebrae.com.br/sites/PortalSebrae/artigos/como-fazer-a-gestao-financeira-do-pequeno-negocio%2Cd999a442d2e5a410VgnVCM1000003b74010aRCRD"><u>Publicação oficial</u></a>.</p>
+</blockquote></li>
+<li><blockquote>
+<p>Banco Central do Brasil. Inadimplência da carteira de crédito por porte da empresa — Micro, Pequena e Média (MPMe). Série temporal mensal. A série mede inadimplência de crédito, não a demanda por BPO. <a href="https://dadosabertos.bcb.gov.br/dataset/27703-inadimplencia-da-carteira-de-credito-por-porte-da-empresa-micro-pequena-e-media-mpme"><u>Base de dados oficial</u></a>.</p>
+</blockquote></li>
+</ol>
+<h5 id="nível-de-confiança"><strong>11. Nível de confiança</strong></h5>
+<p>Médio-baixo. O problema é plausível e o modelo pode ser executado com capital limitado. A disposição a pagar, a margem real e a janela comercial específica ainda precisam ser demonstradas no mercado local.</p>
+<h4 id="o2-apoio-à-gestão-de-riscos-ocupacionais"><strong>O2 — Apoio à gestão de riscos ocupacionais</strong></h4>
+<h5 id="tendência-de-origem-1"><strong>1. Tendência de origem</strong></h5>
+<p>[FATO] A NR-1 passou a incluir expressamente fatores de risco psicossociais relacionados ao trabalho no capítulo de gerenciamento de riscos ocupacionais. O Ministério do Trabalho e Emprego disponibilizou materiais de orientação sobre a aplicação do GRO/PGR.</p>
+<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR4XmP4//8/AwAI/AL+GwXmLwAAAABJRU5ErkJggg==" style="width:0.69444in;height:0.69444in"/></p>
+<p>Ministério do Trabalho e Emprego</p>
+<p>[OPINIÃO] A oportunidade não é vender um diagnóstico genérico de saúde mental. É organizar a execução de ações preventivas, responsabilidades, registros e acompanhamento em empresas que necessitem desse apoio.</p>
+<h5 id="oportunidade-problema-específico-e-cliente-nomeável-1"><strong>2. Oportunidade: problema específico e cliente nomeável</strong></h5>
+<p>[ESTIMATIVA] Atender pequenas empresas do DF com empregados, sem estrutura interna dedicada à gestão de SST, que tenham dificuldade de coordenar ações, acompanhar pendências e manter registros de execução.</p>
+<p>O comprador é o sócio-administrador ou responsável por operações e pessoas. Os canais de aquisição podem incluir empresas de SST, clínicas ocupacionais e profissionais habilitados.</p>
+<p>O escopo da microempresa deve ser gerencial: organização de planos de ação, definição de responsáveis, cronogramas, acompanhamento e evidências. Avaliações técnicas, diagnósticos e documentos que exijam habilitação devem ficar sob responsabilidade dos profissionais competentes.</p>
+<h5 id="cinco-perguntas-de-triagem-1"><strong>3. Cinco perguntas de triagem</strong></h5>
+<p>Q1. Quem exatamente tem esse problema?</p>
+<p>[ESTIMATIVA] Empresas que precisam executar medidas preventivas, mas não dispõem de estrutura administrativa para coordenar prazos, responsáveis e registros.</p>
+<p>[FATO] O Ministério do Trabalho e Emprego esclarece que a NR-1 prevê obrigações e situações específicas de tratamento diferenciado para determinadas microempresas e empresas de pequeno porte. Não se deve presumir que toda empresa desse porte esteja dispensada do gerenciamento de riscos.</p>
+<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR4XmP4//8/AwAI/AL+GwXmLwAAAABJRU5ErkJggg==" style="width:0.69444in;height:0.69444in"/></p>
+<p>Ministério do Trabalho e Emprego</p>
+<p>Q2. Quanto dói?</p>
+<p>[ESTIMATIVA] O custo pode incluir horas administrativas, retrabalho, ações preventivas pendentes e desorganização documental.</p>
+<p>Custo médio desse problema no DF: SEM DADO VERIFICÁVEL.</p>
+<p>O teste comercial deve medir pendências, horas consumidas e custos documentados em cada empresa.</p>
+<p>Q3. Quem paga, e com que dinheiro?</p>
+<p>[OPINIÃO] O sócio-administrador paga com o orçamento operacional se reconhecer valor na organização da execução e se o serviço complementar não duplicar o trabalho do fornecedor de SST.</p>
+<p>Q4. Por que você, e não o incumbente?</p>
+<p>[OPINIÃO] A diferenciação possível é assumir a coordenação gerencial das ações, com responsáveis, prazos, reuniões de acompanhamento e evidências organizadas.</p>
+<p>[OPINIÃO] A metodologia é copiável. A vantagem comercial dependerá de parcerias qualificadas, confiabilidade e capacidade de acompanhar a execução sem invadir atribuições técnicas.</p>
+<p>Q5. Por que agora, e não em 2020 ou 2035?</p>
+<p>[FATO] A nova redação do capítulo 1.5 da NR-1 entrou em vigor em 26 de maio de 2026, com inclusão expressa dos fatores de risco psicossociais relacionados ao trabalho.</p>
+<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR4XmP4//8/AwAI/AL+GwXmLwAAAABJRU5ErkJggg==" style="width:0.69444in;height:0.69444in"/></p>
+<p>Ministério do Trabalho e Emprego</p>
+<p>[OPINIÃO] A mudança abre uma janela para implantação e esclarecimento, mas não comprova que as pequenas empresas do DF contratarão um prestador adicional em 2027.</p>
+<h5 id="ms-1"><strong>4. 3Ms</strong></h5>
+<p>Demanda de mercado</p>
+<ul>
+<li><blockquote>
+<p>[ESTIMATIVA] Público-alvo: empresas com empregados e necessidade concreta de organizar ações preventivas.</p>
+</blockquote></li>
+<li><blockquote>
+<p>[OPINIÃO] Canais: parcerias com prestadores de SST, contadores e consultores de gestão de pessoas.</p>
+</blockquote></li>
+<li><blockquote>
+<p>[ESTIMATIVA] A captação deverá ser recuperada dentro do primeiro ano. O cálculo deve considerar o custo comercial completo e a margem dos contratos.</p>
+</blockquote></li>
+<li><blockquote>
+<p>[OPINIÃO] O acompanhamento periódico pode sustentar receita recorrente, desde que o cliente reconheça valor além do serviço técnico já contratado.</p>
+</blockquote></li>
+</ul>
+<p>Tamanho e estrutura</p>
+<ul>
+<li><blockquote>
+<p>Número de clientes potenciais no DF: SEM DADO VERIFICÁVEL para o nicho específico.</p>
+</blockquote></li>
+<li><blockquote>
+<p>Concorrentes-chave: consultorias de SST, clínicas ocupacionais, profissionais habilitados e consultores de gestão de pessoas.</p>
+</blockquote></li>
+<li><blockquote>
+<p>[FATO] A busca local encontrou, entre os prestadores existentes, a ACMED — Medicina e Segurança do Trabalho e a APS Saúde, evidenciando que há fornecedores atuando no mercado adjacente. A existência desses negócios não determina o tamanho do nicho nem sua disposição a pagar.</p>
+</blockquote></li>
+<li><blockquote>
+<p>[OPINIÃO] Barreiras de entrada: moderadas, sobretudo pela necessidade de delimitar responsabilidades e estabelecer parcerias técnicas confiáveis.</p>
+</blockquote></li>
+<li><blockquote>
+<p>[OPINIÃO] Ciclo de vida: o apoio à implementação pode ter demanda inicial associada à mudança regulatória; o acompanhamento da gestão de riscos pode continuar depois da implantação.</p>
+</blockquote></li>
+</ul>
+<p>Análise de margem</p>
+<p>Valores de planejamento classificados como ESTIMATIVA PRÓPRIA, nominais em reais, sem correção inflacionária.</p>
+<table>
+<colgroup>
+<col style="width: 52%"/>
+<col style="width: 47%"/>
+</colgroup>
+<thead>
+<tr class="header">
+<th><strong>Indicador</strong></th>
+<th><strong>Premissa de planejamento</strong></th>
+</tr>
+<tr class="odd">
+<th>Preço de implantação</th>
+<th>R$ 3.000 por cliente</th>
+</tr>
+<tr class="header">
+<th>Custo variável direto</th>
+<th>R$ 1.200 por implantação</th>
+</tr>
+<tr class="odd">
+<th>Margem bruta estimada</th>
+<th>60%</th>
+</tr>
+<tr class="header">
+<th>Investimento inicial</th>
+<th>R$ 20.000</th>
+</tr>
+<tr class="odd">
+<th>Custos fixos mensais</th>
+<th>R$ 4.000</th>
+</tr>
+<tr class="header">
+<th>Ponto de equilíbrio operacional</th>
+<th>3 implantações por mês</th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+<p>Cálculos das estimativas:</p>
+<ul>
+<li><blockquote>
+<p>Margem bruta = (R$ 3.000 − R$ 1.200) ÷ R$ 3.000 = 60%.</p>
+</blockquote></li>
+<li><blockquote>
+<p>Contribuição por implantação = R$ 3.000 − R$ 1.200 = R$ 1.800.</p>
+</blockquote></li>
+<li><blockquote>
+<p>Ponto de equilíbrio = R$ 4.000 ÷ R$ 1.800 = 2,22; operacionalmente, são necessárias 3 implantações por mês.</p>
+</blockquote></li>
+</ul>
+<p>O cálculo exclui pró-labore adicional, tributos sobre faturamento e custos não previstos. A cadeia de valor envolve triagem, organização do plano de ação, coordenação de responsáveis, acompanhamento e documentação. O custo variável deve contemplar horas de trabalho e serviços técnicos de parceiros quando aplicáveis.</p>
+<h5 id="modelo-de-negócio-quem-paga-por-que-paga-a-que-custo-1"><strong>5. Modelo de negócio: quem paga, por que paga, a que custo</strong></h5>
+<p>[ESTIMATIVA] O cliente paga pela implantação gerencial e pode contratar acompanhamento periódico. O preço depende do escopo, da complexidade e da participação dos parceiros.</p>
+<p>Os custos incluem horas de consultoria, ferramentas de gestão, deslocamentos, prospecção e contratação de apoio técnico.</p>
+<p>[OPINIÃO] O modelo é mais defensável quando a microempresa complementa um prestador de SST, sem se apresentar como substituta de profissionais responsáveis por atividades técnicas regulamentadas.</p>
+<h5 id="enquadramento-nos-cinco-modelos-de-negócio-na-web-1"><strong>6. Enquadramento nos cinco modelos de negócio na web</strong></h5>
+<p>[OPINIÃO] Modelo empresarial (B2B). A receita vem da prestação direta de serviços a empresas. Os canais digitais apoiam a organização e o acompanhamento, mas a oferta não depende de um mercado virtual, propaganda ou rede social.</p>
+<h5 id="checklist-final-de-dornelas-1"><strong>7. Checklist final de Dornelas</strong></h5>
+<table>
+<colgroup>
+<col style="width: 35%"/>
+<col style="width: 64%"/>
+</colgroup>
+<thead>
+<tr class="header">
+<th><strong>Pergunta</strong></th>
+<th><strong>Resposta</strong></th>
+</tr>
+<tr class="odd">
+<th>(a) Existe um problema a ser resolvido?</th>
+<th>SIM — coordenar a execução e o acompanhamento de ações preventivas é uma necessidade gerencial plausível.</th>
+</tr>
+<tr class="header">
+<th>(b) Existe um serviço que solucionará o problema?</th>
+<th>SIM — é possível organizar planos, responsáveis, prazos e evidências dentro do escopo permitido.</th>
+</tr>
+<tr class="odd">
+<th>(c) É possível identificar os potenciais clientes?</th>
+<th>SIM — empresas com empregados e necessidade de coordenação de ações.</th>
+</tr>
+<tr class="header">
+<th>(d) É possível implantar marketing e vendas exequíveis?</th>
+<th>INCERTO — faltam evidências de conversão comercial e de demanda incremental além dos prestadores existentes.</th>
+</tr>
+<tr class="odd">
+<th>(e) A janela da oportunidade está aberta?</th>
+<th>SIM — há mudança normativa recente, embora a demanda pagante ainda precise ser comprovada.</th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+<p>Decisão: segue para validação comercial, com exigência de delimitação de escopo e responsabilidades técnicas antes da venda.</p>
+<h5 id="hipótese-crítica-e-teste-mais-barato-para-validá-la-1"><strong>8. Hipótese crítica e teste mais barato para validá-la</strong></h5>
+<ul>
+<li><blockquote>
+<p>Teste: apresentar a oferta a empresas de SST e a potenciais clientes, buscando uma implantação paga.</p>
+</blockquote></li>
+<li><blockquote>
+<p>Custo: [ESTIMATIVA PRÓPRIA] até R$ 800, como teto para deslocamentos, materiais e reuniões.</p>
+</blockquote></li>
+<li><blockquote>
+<p>Prazo: [ESTIMATIVA PRÓPRIA] 45 dias.</p>
+</blockquote></li>
+<li><blockquote>
+<p>Critério objetivo: [ESTIMATIVA PRÓPRIA] fechar contratos pagos com dois clientes independentes e obter ao menos uma parceria formal de indicação ou execução técnica.</p>
+</blockquote></li>
+</ul>
+<h5 id="o-que-pode-não-acontecer-1"><strong>9. O que pode não acontecer</strong></h5>
+<p>[OPINIÃO] Os prestadores de SST podem preferir incorporar a coordenação gerencial à própria oferta. O cliente também pode considerar o serviço redundante. Sem uma diferenciação clara e parceiros confiáveis, o risco de responsabilidade pode ser incompatível com a estrutura da microempresa.</p>
+<h5 id="fontes-1"><strong>10. Fontes</strong></h5>
+<ol type="1">
+<li><blockquote>
+<p>Ministério do Trabalho e Emprego. Norma Regulamentadora nº 1 — Disposições Gerais e Gerenciamento de Riscos Ocupacionais. Texto vigente e histórico de alterações. <a href="https://www.gov.br/trabalho-e-emprego/pt-br/acesso-a-informacao/participacao-social/conselhos-e-orgaos-colegiados/comissao-tripartite-paritaria-permanente/normas-regulamentadora/normas-regulamentadoras-vigentes/nr-1"><u>NR-1 oficial</u></a>.</p>
+</blockquote></li>
+<li><blockquote>
+<p>Ministério do Trabalho e Emprego. Materiais de orientação sobre GRO/PGR e fatores de riscos psicossociais, disponibilizados na página oficial da NR-1. <a href="https://www.gov.br/trabalho-e-emprego/pt-br/acesso-a-informacao/participacao-social/conselhos-e-orgaos-colegiados/comissao-tripartite-paritaria-permanente/normas-regulamentadora/normas-regulamentadoras-vigentes/nr-1"><u>Consultar orientações oficiais</u></a>.</p>
+</blockquote></li>
+<li><blockquote>
+<p>Busca de negócios no DF: ACMED — Medicina e Segurança do Trabalho e APS Saúde. Resultados comerciais usados apenas para identificar prestadores atuantes no mercado adjacente.</p>
+</blockquote></li>
+</ol>
+<h5 id="nível-de-confiança-1"><strong>11. Nível de confiança</strong></h5>
+<p>Médio. A mudança normativa é documentada e o serviço gerencial é executável com capital limitado. A incerteza central é a disposição a pagar por uma oferta separada dos serviços técnicos já prestados no mercado.</p>
+<h4 id="o3-implantação-operacional-da-nfs-e-nacional"><strong>O3 — Implantação operacional da NFS-e nacional</strong></h4>
+<h5 id="tendência-de-origem-2"><strong>1. Tendência de origem</strong></h5>
+<p>[FATO] A Receita Federal estabeleceu a obrigatoriedade de uso do Emissor Nacional da NFS-e para ME e EPP optantes pelo Simples Nacional a partir de novembro de 2026 e esclareceu a aplicação das regras de IBS e CBS a partir de janeiro de 2027.</p>
+<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR4XmP4//8/AwAI/AL+GwXmLwAAAABJRU5ErkJggg==" style="width:0.69444in;height:0.69444in"/></p>
+<p>Receita Federal</p>
+<p>+1</p>
+<p>[OPINIÃO] A tendência é a padronização e a adaptação dos processos fiscais. A oportunidade potencial está em ajudar empresas que continuem enfrentando dificuldades operacionais, não em revender o acesso à ferramenta oficial.</p>
+<h5 id="oportunidade-problema-específico-e-cliente-nomeável-2"><strong>2. Oportunidade: problema específico e cliente nomeável</strong></h5>
+<p>[ESTIMATIVA] Atender prestadores de serviços de pequeno porte do DF que precisem reorganizar a rotina de emissão fiscal, cadastro de serviços, fluxo de faturamento e comunicação com o contador.</p>
+<p>O comprador é o sócio-administrador ou responsável financeiro. Contadores podem atuar como parceiros de indicação e validação das rotinas.</p>
+<p>O serviço abrange levantamento do processo, organização de dados, treinamento operacional, documentação e acompanhamento inicial. Não inclui assumir obrigações contábeis ou prestar aconselhamento tributário fora da habilitação profissional pertinente.</p>
+<h5 id="cinco-perguntas-de-triagem-2"><strong>3. Cinco perguntas de triagem</strong></h5>
+<p>Q1. Quem exatamente tem esse problema?</p>
+<p>[ESTIMATIVA] Prestadores de serviços com emissão recorrente de NFS-e, processos manuais e dificuldades de integração entre faturamento, financeiro e contabilidade.</p>
+<p>Q2. Quanto dói?</p>
+<p>[ESTIMATIVA] O impacto pode envolver retrabalho, atraso no faturamento, erros operacionais e tempo gasto pelo proprietário.</p>
+<p>Custo médio no DF: SEM DADO VERIFICÁVEL.</p>
+<p>A validação deve medir ocorrências e horas efetivamente gastas por empresa.</p>
+<p>Q3. Quem paga, e com que dinheiro?</p>
+<p>[OPINIÃO] O sócio paga com recursos operacionais quando o custo da implantação é inferior ao benefício esperado de reduzir retrabalho e organizar a rotina.</p>
+<p>Q4. Por que você, e não o incumbente?</p>
+<p>[OPINIÃO] A diferenciação possível é implantar um processo completo de faturamento e treinar a equipe, trabalhando em conjunto com o contador. Apenas explicar como acessar o emissor não justifica um serviço de maior valor.</p>
+<p>A oferta é facilmente copiável; a vantagem depende de especialização por segmento, confiança e rapidez de implantação.</p>
+<p>Q5. Por que agora, e não em 2020 ou 2035?</p>
+<p>[FATO] A obrigação de adoção do Emissor Nacional da NFS-e para ME e EPP optantes pelo Simples Nacional foi estabelecida para novembro de 2026, e a aplicação das disposições relativas a IBS e CBS a esses optantes passa a produzir efeitos a partir de janeiro de 2027.</p>
+<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR4XmP4//8/AwAI/AL+GwXmLwAAAABJRU5ErkJggg==" style="width:0.69444in;height:0.69444in"/></p>
+<p>Receita Federal</p>
+<p>[OPINIÃO] A janela é mais favorável durante a adaptação inicial. Depois, a procura por implantação pontual pode diminuir, embora continuem existindo necessidades de treinamento e organização operacional.</p>
+<h5 id="ms-2"><strong>4. 3Ms</strong></h5>
+<p>Demanda de mercado</p>
+<ul>
+<li><blockquote>
+<p>[ESTIMATIVA] Público-alvo: prestadores de serviços do DF com necessidade comprovada de reorganização operacional.</p>
+</blockquote></li>
+<li><blockquote>
+<p>[OPINIÃO] Canais prioritários: contadores, associações empresariais e prospecção direta.</p>
+</blockquote></li>
+<li><blockquote>
+<p>[ESTIMATIVA] O custo de captação deverá ser recuperado na primeira implantação ou dentro do primeiro ano.</p>
+</blockquote></li>
+<li><blockquote>
+<p>[FATO] O Emissor Nacional é disponibilizado oficialmente; portanto, o serviço precisa gerar valor operacional adicional ao acesso gratuito à ferramenta.<br/>
+<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR4XmP4//8/AwAI/AL+GwXmLwAAAABJRU5ErkJggg==" style="width:0.69444in;height:0.69444in"/><br/>
+Receita Federal</p>
+</blockquote></li>
+</ul>
+<p>Tamanho e estrutura</p>
+<ul>
+<li><blockquote>
+<p>Número de clientes potenciais no DF: SEM DADO VERIFICÁVEL para o nicho com necessidade operacional e disposição a pagar.</p>
+</blockquote></li>
+<li><blockquote>
+<p>Concorrentes-chave: contadores, consultorias de implantação de sistemas, fornecedores de software de gestão e prestadores de BPO administrativo.</p>
+</blockquote></li>
+<li><blockquote>
+<p>[OPINIÃO] Barreiras de entrada: baixas a moderadas.</p>
+</blockquote></li>
+<li><blockquote>
+<p>[OPINIÃO] Ciclo de vida: a implantação fiscal tem risco de demanda concentrada na transição, podendo se transformar em serviço complementar de organização administrativa.</p>
+</blockquote></li>
+</ul>
+<p>Análise de margem</p>
+<p>Valores classificados como ESTIMATIVA PRÓPRIA, em reais nominais, sem correção pela inflação.</p>
+<table>
+<colgroup>
+<col style="width: 52%"/>
+<col style="width: 47%"/>
+</colgroup>
+<thead>
+<tr class="header">
+<th><strong>Indicador</strong></th>
+<th><strong>Premissa de planejamento</strong></th>
+</tr>
+<tr class="odd">
+<th>Preço por implantação</th>
+<th>R$ 1.800</th>
+</tr>
+<tr class="header">
+<th>Custo variável direto</th>
+<th>R$ 450</th>
+</tr>
+<tr class="odd">
+<th>Margem bruta estimada</th>
+<th>75%</th>
+</tr>
+<tr class="header">
+<th>Investimento inicial</th>
+<th>R$ 15.000</th>
+</tr>
+<tr class="odd">
+<th>Custos fixos mensais</th>
+<th>R$ 3.000</th>
+</tr>
+<tr class="header">
+<th>Ponto de equilíbrio operacional</th>
+<th>3 implantações por mês</th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+<p>Cálculos das estimativas:</p>
+<ul>
+<li><blockquote>
+<p>Margem bruta = (R$ 1.800 − R$ 450) ÷ R$ 1.800 = 75%.</p>
+</blockquote></li>
+<li><blockquote>
+<p>Contribuição por implantação = R$ 1.800 − R$ 450 = R$ 1.350.</p>
+</blockquote></li>
+<li><blockquote>
+<p>Ponto de equilíbrio = R$ 3.000 ÷ R$ 1.350 = 2,22; operacionalmente, são necessárias 3 implantações por mês.</p>
+</blockquote></li>
+</ul>
+<p>O cálculo exclui pró-labore adicional, tributos sobre faturamento e outros custos não previstos. A cadeia de valor inclui diagnóstico, organização dos dados, treinamento, documentação e acompanhamento inicial.</p>
+<h5 id="modelo-de-negócio-quem-paga-por-que-paga-a-que-custo-2"><strong>5. Modelo de negócio: quem paga, por que paga, a que custo</strong></h5>
+<p>[ESTIMATIVA] O cliente paga por uma implantação com escopo definido. A receita complementar pode vir de treinamento adicional e revisão periódica de processos.</p>
+<p>Os custos principais são horas de entrega, capacitação, ferramentas, prospecção e deslocamento.</p>
+<p>[OPINIÃO] O modelo é mais seguro se funcionar como uma oferta complementar ao contador e a outros serviços administrativos, reduzindo a dependência de uma janela temporária.</p>
+<h5 id="enquadramento-nos-cinco-modelos-de-negócio-na-web-2"><strong>6. Enquadramento nos cinco modelos de negócio na web</strong></h5>
+<p>[OPINIÃO] Modelo empresarial (B2B). O serviço é vendido diretamente a empresas. A web é um canal de aquisição e execução, sem dependência de mercado virtual ou rede social.</p>
+<h5 id="checklist-final-de-dornelas-2"><strong>7. Checklist final de Dornelas</strong></h5>
+<table>
+<colgroup>
+<col style="width: 38%"/>
+<col style="width: 61%"/>
+</colgroup>
+<thead>
+<tr class="header">
+<th><strong>Pergunta</strong></th>
+<th><strong>Resposta</strong></th>
+</tr>
+<tr class="odd">
+<th>(a) Existe um problema a ser resolvido?</th>
+<th>SIM — empresas podem ter dificuldades operacionais na adaptação de suas rotinas.</th>
+</tr>
+<tr class="header">
+<th>(b) Existe um serviço que solucionará o problema?</th>
+<th>SIM — implantação, treinamento e organização de processos.</th>
+</tr>
+<tr class="odd">
+<th>(c) É possível identificar os potenciais clientes?</th>
+<th>SIM — prestadores de serviços com dificuldades operacionais verificáveis.</th>
+</tr>
+<tr class="header">
+<th>(d) É possível implantar marketing e vendas exequíveis?</th>
+<th>INCERTO — depende da disposição a pagar por algo além do suporte contábil e da ferramenta oficial.</th>
+</tr>
+<tr class="odd">
+<th>(e) A janela da oportunidade está aberta?</th>
+<th>SIM — há uma transição regulatória recente, mas a duração da demanda comercial é incerta.</th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+<p>Decisão: segue para validação comercial como oferta pontual ou complementar, não como negócio autônomo de investimento imediato.</p>
+<h5 id="hipótese-crítica-e-teste-mais-barato-para-validá-la-2"><strong>8. Hipótese crítica e teste mais barato para validá-la</strong></h5>
+<ul>
+<li><blockquote>
+<p>Teste: entrevistar potenciais compradores e contadores e oferecer uma implantação paga com escopo definido.</p>
+</blockquote></li>
+<li><blockquote>
+<p>Custo: [ESTIMATIVA PRÓPRIA] até R$ 500, como teto de despesas de validação.</p>
+</blockquote></li>
+<li><blockquote>
+<p>Prazo: [ESTIMATIVA PRÓPRIA] 30 dias.</p>
+</blockquote></li>
+<li><blockquote>
+<p>Critério objetivo: [ESTIMATIVA PRÓPRIA] conquistar contratos pagos de clientes independentes e comprovar que a margem por implantação cobre os custos variáveis medidos.</p>
+</blockquote></li>
+</ul>
+<h5 id="o-que-pode-não-acontecer-2"><strong>9. O que pode não acontecer</strong></h5>
+<p>[OPINIÃO] O contador pode absorver a adaptação sem custo adicional, e o cliente pode não reconhecer valor em contratar outro prestador. A demanda também pode cair após a fase de transição.</p>
+<h5 id="fontes-2"><strong>10. Fontes</strong></h5>
+<ol type="1">
+<li><blockquote>
+<p>Receita Federal. Simples Nacional: NFS-e Nacional será obrigatória para ME e EPP a partir de 1º de novembro de 2026. Publicado em 14 de agosto de 2026. <a href="https://www.gov.br/receitafederal/pt-br/assuntos/noticias/2026/agosto/simples-nacional-nfs-e-nacional-sera-obrigatoria-para-me-epp-a-partir-de-1o-de-novembro-de-2026"><u>Publicação oficial</u></a>.</p>
+</blockquote></li>
+<li><blockquote>
+<p>Receita Federal. Orientações da Reforma Tributária do Consumo. Publicado em setembro de 2026, com cronograma de documentos fiscais eletrônicos. <a href="https://www.gov.br/receitafederal/pt-br/acesso-a-informacao/acoes-e-programas/programas-e-atividades/reforma-tributaria-do-consumo/orientacoes-da-reforma-tributaria"><u>Orientações oficiais</u></a>.</p>
+</blockquote></li>
+</ol>
+<h5 id="nível-de-confiança-2"><strong>11. Nível de confiança</strong></h5>
+<p>Médio-baixo. A janela regulatória é comprovada e a implantação é executável. A incerteza está na disposição a pagar por um serviço adicional, na quantidade de empresas que realmente necessitarão de ajuda e na continuidade da demanda depois da transição.</p>
+<h4 id="ideias-descartadas-no-filtro-final"><strong>3. Ideias descartadas no filtro final</strong></h4>
+<p>[OPINIÃO] As ideias a seguir não foram aprovadas porque falharam em pelo menos um critério estratégico ou não apresentaram evidência suficiente para justificar a entrada de uma nova microempresa. A classificação indica o motivo principal do descarte, não uma prova de inexistência de mercado.</p>
+<table>
+<colgroup>
+<col style="width: 29%"/>
+<col style="width: 25%"/>
+<col style="width: 44%"/>
+</colgroup>
+<thead>
+<tr class="header">
+<th><strong>Ideia descartada</strong></th>
+<th><strong>Pergunta de Dornelas</strong></th>
+<th><strong>Justificativa</strong></th>
+</tr>
+<tr class="odd">
+<th>Recuperação administrativa de recebíveis B2B</th>
+<th>Q4 — Por que você, e não o incumbente?</th>
+<th>Diferenciação frente a empresas de cobrança e equipes financeiras não demonstrada.</th>
+</tr>
+<tr class="header">
+<th>Organização e melhoria de processos internos</th>
+<th>Q5 — Por que agora?</th>
+<th>Problema plausível, mas sem janela específica ou segmento prioritário comprovado.</th>
+</tr>
+<tr class="odd">
+<th>Implantação de CRM</th>
+<th>Q4 — Por que você, e não o incumbente?</th>
+<th>Concorrência com softwares e consultores; diferencial ainda não demonstrado.</th>
+</tr>
+<tr class="header">
+<th>Recrutamento terceirizado</th>
+<th>Q4 — Por que você, e não o incumbente?</th>
+<th>Não foi comprovada vantagem sobre recrutadores e plataformas existentes.</th>
+</tr>
+<tr class="odd">
+<th>Estruturação de cargos e avaliação de desempenho</th>
+<th>Q5 — Por que agora?</th>
+<th>Não foi identificada uma mudança recente que justifique a entrada nesse horizonte específico.</th>
+</tr>
+<tr class="header">
+<th>Adequação documental à LGPD</th>
+<th>Q4 — Por que você, e não o incumbente?</th>
+<th>Diferenciação frente a consultorias jurídicas e de privacidade não demonstrada.</th>
+</tr>
+<tr class="odd">
+<th>Gestão de redes sociais</th>
+<th>Q4 — Por que você, e não o incumbente?</th>
+<th>Oferta facilmente comparável, sem nicho ou vantagem competitiva verificados.</th>
+</tr>
+<tr class="header">
+<th>Pesquisa de mercado sob demanda</th>
+<th>Q3 — Quem paga, e com que dinheiro?</th>
+<th>Falta comprovação de um segmento local com orçamento e disposição a pagar.</th>
+</tr>
+<tr class="odd">
+<th>Indicadores e painéis gerenciais</th>
+<th>Q4 — Por que você, e não o incumbente?</th>
+<th>Não foi comprovada vantagem frente a softwares e consultorias existentes.</th>
+</tr>
+<tr class="header">
+<th>Treinamentos empresariais padronizados</th>
+<th>Q3 — Quem paga, e com que dinheiro?</th>
+<th>Não foi identificado comprador específico com demanda recorrente comprovada.</th>
+</tr>
+<tr class="odd">
+<th>Intermediação de fornecedores</th>
+<th>Q4 — Por que você, e não o incumbente?</th>
+<th>Não foi demonstrado valor adicional suficiente sobre a contratação direta.</th>
+</tr>
+<tr class="header">
+<th>Organização para obtenção de crédito</th>
+<th>Q4 — Por que você, e não o incumbente?</th>
+<th>Diferenciação frente a bancos, contadores e consultores não demonstrada.</th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+<p>Importante: o BPO financeiro também permanece condicionado à validação comercial, pois seu checklist contém respostas INCERTO. Não seria metodologicamente correto apresentá-lo como oportunidade definitivamente comprovada.</p>
+<h4 id="ranking-final-das-oportunidades"><strong>4. Ranking final das oportunidades</strong></h4>
+<p>O ranking considera adequação ao capital próprio, clareza do comprador, potencial de recorrência, barreiras de entrada e riscos de execução. Não é uma previsão de rentabilidade.</p>
+<table>
+<colgroup>
+<col style="width: 10%"/>
+<col style="width: 25%"/>
+<col style="width: 63%"/>
+</colgroup>
+<thead>
+<tr class="header">
+<th><strong>Posição</strong></th>
+<th><strong>Oportunidade</strong></th>
+<th><strong>Justificativa</strong></th>
+</tr>
+<tr class="odd">
+<th>1º</th>
+<th>BPO financeiro</th>
+<th>[OPINIÃO] Melhor potencial de receita recorrente, desde que o teste confirme margem, retenção e aquisição viável de clientes.</th>
+</tr>
+<tr class="header">
+<th>2º</th>
+<th>Apoio à gestão de riscos ocupacionais</th>
+<th>[OPINIÃO] Mudança regulatória documentada e possibilidade de contratos de acompanhamento, mas exige parceiros técnicos e delimitação rigorosa de responsabilidades.</th>
+</tr>
+<tr class="odd">
+<th>3º</th>
+<th>Implantação operacional da NFS-e nacional</th>
+<th>[OPINIÃO] Fácil de testar e com janela regulatória identificável, mas maior risco de queda da demanda após a adaptação inicial.</th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+<h4 id="decisão-de-investimento"><strong>5. Decisão de investimento</strong></h4>
+<p>[OPINIÃO] Nenhuma das três oportunidades está suficientemente validada para justificar, por si só, o investimento integral do capital disponível. O próximo passo racional é executar os testes comerciais antes da abertura formal ou de comprometer recursos relevantes.</p>
+<p>A decisão deve ser tomada com base em contratos efetivamente pagos, margem por cliente, custo de aquisição e capacidade de entrega — não apenas na existência de uma tendência ou de uma mudança normativa.</p>
+<h4 id="declaração-de-pesquisa"><strong>6. Declaração de pesquisa</strong></h4>
+<ul>
+<li><blockquote>
+<p>Busca na web nesta resposta: sim.</p>
+</blockquote></li>
+<li><blockquote>
+<p>Data de corte da pesquisa: 10 de outubro de 2026.</p>
+</blockquote></li>
+<li><blockquote>
+<p>Fontes consultadas: Receita Federal, Ministério do Trabalho e Emprego, Sebrae, IBGE e Banco Central do Brasil, além de resultados de negócios locais para identificar concorrentes no mercado adjacente.</p>
+</blockquote></li>
+<li><blockquote>
+<p>Número de clientes potenciais no DF: SEM DADO VERIFICÁVEL para os recortes específicos avaliados.</p>
+</blockquote></li>
+<li><blockquote>
+<p>Preços, custos, margens e prazos dos testes: estimativas próprias de planejamento, explicitamente identificadas e acompanhadas dos cálculos pertinentes.</p>
+</blockquote></li>
+<li><blockquote>
+<p>Limitação: a pesquisa documental não substitui entrevistas com compradores, levantamento de preços concorrentes e testes de venda no Distrito Federal.</p>
+</blockquote></li>
+</ul>
+</div></details>
+<details><summary>Anexo B — resposta da ferramenta B</summary><div class="annex"><h3 id="relatório-de-qualificação-de-oportunidades-de-negócios-b2b-no-distrito-federal-20262030">Relatório de Qualificação de Oportunidades de Negócios B2B no Distrito Federal (2026–2030)</h3>
+<h4 id="mapeamento-ampliado-e-triagem-inicial-de-ideias-de-negócio">1. Mapeamento Ampliado e Triagem Inicial de Ideias de Negócio</h4>
+<p>No âmbito do mercado de serviços técnicos e de apoio prestados a micro e pequenas empresas (B2B) no Distrito Federal (DF), foram geradas 15 ideias de negócios com potencial de operação a partir de 2027, alinhadas às transformações tributárias, regulatórias e operacionais da região [FATO]<sup>1</sup>. A lista integral submetida ao processo de triagem é apresentada a seguir:</p>
+<ol type="1">
+<li><blockquote>
+<p>Consultoria de Transição e Gestão do Simples Híbrido (IBS/CBS) para MPEs B2B do Distrito Federal.</p>
+</blockquote></li>
+<li><blockquote>
+<p>Outsourcing Enxuto de Faturamento Digital e Emissão Automatizada de NF-e para MEIs do Distrito Federal.</p>
+</blockquote></li>
+<li><blockquote>
+<p>Mentoria Enxuta de Governança de Dados e Conformidade à LGPD para Microempresas de Serviços de Apoio no Distrito Federal.</p>
+</blockquote></li>
+<li><blockquote>
+<p>Implementação Comercial de Ferramentas SaaS de IA Generativa para Atendimento em MPEs do DF.</p>
+</blockquote></li>
+<li><blockquote>
+<p>Serviço de BPO Financeiro e Conciliação Bancária Especializado para Consultórios Médicos do DF.</p>
+</blockquote></li>
+<li><blockquote>
+<p>Desenvolvimento e Licenciamento de Software ERP em Nuvem para Microempresas do DF.</p>
+</blockquote></li>
+<li><blockquote>
+<p>Consultoria para Captação de Incentivos Fiscais e Benefícios Regionais do DF para MPEs.</p>
+</blockquote></li>
+<li><blockquote>
+<p>Agência de Marketing Digital Generalista para Gestão de Redes Sociais de Microempresas Locais do DF.</p>
+</blockquote></li>
+<li><blockquote>
+<p>Consultoria Especializada em Licenciamento Ambiental Complexo para Indústrias do DF.</p>
+</blockquote></li>
+<li><blockquote>
+<p>Plataforma Proprietária de Marketplace B2B para Conectar Distribuidoras Locais a Pequenos Mercados.</p>
+</blockquote></li>
+<li><blockquote>
+<p>Serviço de Sanitização e Limpeza Terceirizada de Prédios e Instalações Comerciais no DF.</p>
+</blockquote></li>
+<li><blockquote>
+<p>BPO de Cobrança Preventiva e Gestão Cadastral de Inadimplência para Varejistas do DF.</p>
+</blockquote></li>
+<li><blockquote>
+<p>Inventário Patrimonial Físico e Etiquetagem de Ativos Fixos para Pequenos Comércios do DF.</p>
+</blockquote></li>
+<li><blockquote>
+<p>Consultoria de Redução de Desperdícios Operacionais e Engenharia de Cardápio para Bares do DF.</p>
+</blockquote></li>
+<li><blockquote>
+<p>Auditoria Integrada de Conformidade de Segurança do Trabalho e eSocial para Pequenas Construtoras Locais do DF.</p>
+</blockquote></li>
+</ol>
+<p>Após a aplicação rigorosa do filtro de corte de Dornelas e a verificação dos critérios do recorte estabelecido (capital inicial de até R$ 50 mil, estrutura de 1 a 3 sócios, ausência de tecnologia proprietária complexa e independência de incentivos fiscais ou licenças morosas), apenas 3 oportunidades sobreviveram integralmente a todos os quesitos. As demais 12 ideias foram descartadas e encontram-se detalhadas na seção correspondente.</p>
+<h4 id="detalhamento-das-oportunidades-aprovadas">2. Detalhamento das Oportunidades Aprovadas</h4>
+<h5 id="o1-consultoria-de-transição-e-gestão-do-simples-híbrido-ibscbs-para-mpes-b2b-do-df">O1 — Consultoria de Transição e Gestão do Simples Híbrido (IBS/CBS) para MPEs B2B do DF</h5>
+<ol type="1">
+<li><blockquote>
+<p><strong>Tendência de origem</strong>: A reestruturação da tributação sobre o consumo no Brasil pela Lei Complementar nº 214/2025 altera radicalmente o aproveitamento de créditos tributários na cadeia B2B com a criação do IVA Dual (IBS e CBS) [FATO] (Fonte: Presidência da República, Lei Complementar nº 214/2025, 2025, nominal, Brasil)<sup>3</sup>. Com a publicação das Resoluções CGSN nº 186/2026 e nº 190/2026, as empresas do Simples Nacional ganharam a prerrogativa de optar pelo recolhimento do IBS/CBS pelo regime regular (Simples Híbrido) para transferência integral de créditos a seus compradores Pessoas Jurídicas [FATO] (Fonte: Ministério da Fazenda / CGSN, Resolução CGSN nº 186/2026, 2026, nominal, Brasil)<sup>5</sup>.</p>
+</blockquote></li>
+<li><blockquote>
+<p><strong>Oportunidade</strong>: Microempresas prestadoras de serviços e fornecedoras B2B do DF enfrentam risco iminente de descredenciamento comercial ou rescisão contratual por parte de clientes Pessoas Jurídicas que exigirão transferência integral de créditos fiscais de IBS e CBS a partir de 2027 [FATO]<sup>5</sup>. O problema concreto é a falta de capacidade técnica dos sócios para calcular o impacto financeiro na margem de lucro entre o Simples "Puro" e o Simples "Híbrido", somada ao desconhecimento da alteração do prazo regulatório de opção fiscal, que foi antecipado para o mês de setembro de 2026 (com efeitos para 2027) pela Resolução CGSN nº 186/2026 [FATO] (Fonte: Ministério da Fazenda / CGSN, Resolução CGSN nº 186/2026, 2026, nominal, Brasil)<sup>5</sup>. Cliente nomeável: Microempresa (ME) prestadora de serviços de escritório, apoio administrativo ou consultoria (CNAE 8211-3/00 e CNAE 8219-9/99), optante pelo Simples Nacional, localizada nos polos empresariais do DF (Asa Sul, Asa Norte, Taguatinga e Águas Claras), com faturamento predominantemente B2B. Decisor de compra: sócio-administrador ou diretor financeiro da ME.</p>
+</blockquote></li>
+<li><blockquote>
+<p><strong>Cinco perguntas de triagem</strong>:</p>
+</blockquote>
+<ul>
+<li><blockquote>
+<p><strong>Q1. Quem exatamente tem esse problema?</strong> Microempresas (ME) do Distrito Federal, optantes pelo Simples Nacional, que fornecem serviços ou produtos para clientes Pessoas Jurídicas (B2B) e cujos tomadores demandarão destaque de créditos de IBS e CBS a partir de 2027 [FATO]<sup>5</sup>.</p>
+</blockquote></li>
+<li><blockquote>
+<p><strong>Q2. Quanto dói?</strong> Risco de rescisão imediata de contratos corporativos vigentes [FATO]<sup>5</sup>. A perda de um único contrato B2B de valor médio no DF (R$ 5.000,00 por mês) equivale a uma frustração de faturamento bruto de R$ 60.000,00 em 12 meses [ESTIMATIVA PRÓPRIA: R$ 5.000,00/mês × 12 meses = R$ 60.000,00/ano].</p>
+</blockquote></li>
+<li><blockquote>
+<p><strong>Q3. Quem paga, e com que dinheiro?</strong> O sócio-administrador da microempresa, utilizando os recursos da conta corrente jurídica operacional da empresa.</p>
+</blockquote></li>
+<li><blockquote>
+<p><strong>Q4. Por que você, e não o incumbente?</strong> Os escritórios de contabilidade tradicionais no DF focam em rotinas operacionais repetitivas (folha de pagamento e emissão de DAS) e não entregam simulações estratégicas de margem e precificação B2B sob o novo regime. Copiar a solução em três meses é improvável porque exige a combinação de modelagem de formação de preços B2B e conhecimento especializado das regras de transição da LC 214/2025 [FATO]<sup>3</sup>.</p>
+</blockquote></li>
+<li><blockquote>
+<p><strong>Q5. Por que agora, e não em 2020 ou 2035?</strong> A Resolução CGSN nº 186/2026 alterou o calendário histórico do Simples Nacional, fixando a janela de opção pelo Simples Híbrido obrigatoriamente para setembro de 2026 [FATO]<sup>5</sup>. Em 2020 a Reforma Tributária não havia sido promulgada, e em 2035 o período de transição dos tributos sobre o consumo já estará encerrado [FATO]<sup>3</sup>.</p>
+</blockquote></li>
+</ul></li>
+<li><blockquote>
+<p><strong>3Ms</strong>:</p>
+</blockquote>
+<ul>
+<li><blockquote>
+<p><strong>Demanda de mercado</strong>: MPEs do DF atuantes no mercado B2B. Canais de acesso: prospecção ativa B2B via dados públicos da Receita Federal (filtrando CNAE de serviços corporativos e opção pelo Simples no DF) e palestras técnicas presenciais em associações empresariais e sindicatos patronais do DF. Custo de Aquisição de Cliente (CAC) estimado em R$ 350,00 por contrato [ESTIMATIVA PRÓPRIA: R$ 1.050,00 em despesas de prospecção e transporte para cada 3 clientes fechados], recuperado integralmente no primeiro pagamento de adesão.</p>
+</blockquote></li>
+<li><blockquote>
+<p><strong>Tamanho e estrutura</strong>: O Distrito Federal possui 347.902 empresas optantes pelo Simples Nacional [FATO] (Fonte: Receita Federal / Oportunidados, base de outubro de 2026, nominal, DF)<sup>2</sup>. Especificamente no segmento B2B de serviços corporativos, existem 10.949 MEs ativas no CNAE 8219-9/99 e 6.930 MEs no CNAE 8211-3/00 [FATO] (Fonte: Receita Federal / Oportunidados, base de outubro de 2026, nominal, DF)<sup>2</sup>. Considerando que cerca de 25% dessas empresas atendam predominantemente PJs, o mercado endereçável direto abrange 4.470 microempresas no DF [ESTIMATIVA PRÓPRIA: (10.949 + 6.930) × 0,25 = 4.469,75]. Concorrentes-chave: consultorias tributárias de grande porte (focadas em grandes corporações com honorários elevados) e contabilidades tradicionais (com baixa capacidade consultiva de precificação). O mercado é pulverizado e em estágio inicial de ciclo de vida.</p>
+</blockquote></li>
+<li><blockquote>
+<p><strong>Análise de margem</strong>: Margem bruta estimada em 82% [ESTIMATIVA PRÓPRIA: Honorário do projeto de transição de R$ 2.500,00 deduzido dos custos diretos de R$ 450,00 em softwares de simulação, transporte e relatórios = R$ 2.050,00 de lucro bruto; Margem = (R$ 2.050,00 / R$ 2.500,00) × 100 = 82%]. Investimento inicial de R$ 22.000,00 (destinado a computadores, licenças de software no-code de simulação fiscal, marketing de lançamento e capital de giro). Ponto de equilíbrio atingido com 4 projetos por mês ou R$ 10.000,00 em faturamento bruto mensal [ESTIMATIVA PRÓPRIA: Custos fixos operacionais de R$ 8.200,00 / Margem de contribuição unitária de R$ 2.050,00 = 4 projetos]. Cadeia de valor: extração de dados fiscais (SPED/XML), simulação de margem no Simples Puro vs. Híbrido, reestruturação de tabela de preços e acompanhamento do protocolo formal.</p>
+</blockquote></li>
+</ul></li>
+<li><blockquote>
+<p><strong>Modelo de negócio</strong>: Cobrança por projeto pontual de transição (R$ 2.500,00 por diagnóstico e planejamento tributário-comercial) somada a um contrato facultativo de acompanhamento trimestral de readequação de preços e apuração (R$ 490,00/mês). O cliente paga para garantir a manutenção de seus contratos comerciais B2B. A estrutura de custos é composta por licenças de softwares analíticos no-code, despesas de deslocamento comercial no DF, investimento em marketing e pró-labore dos sócios.</p>
+</blockquote></li>
+<li><blockquote>
+<p><strong>Enquadramento nos modelos de negócio na web</strong>: Enquadra-se no modelo <strong>Empresarial (B2B Consultative Service)</strong>, operando com suporte de ferramentas web e em nuvem para análise de arquivos fiscais digitais e reuniões remotas. Não se enquadra em intermediação, propaganda, mercado virtual ou redes sociais, pois presta consultoria técnica direta sem operar ecossistema de plataforma multilateral.</p>
+</blockquote></li>
+<li><blockquote>
+<p><strong>Checklist final de Dornelas</strong>:</p>
+</blockquote>
+<ul>
+<li><blockquote>
+<p>(a) Existe um problema a ser resolvido? SIM.</p>
+</blockquote></li>
+<li><blockquote>
+<p>(b) Existe um produto ou serviço que solucionará esse problema? SIM.</p>
+</blockquote></li>
+<li><blockquote>
+<p>(c) É possível identificar com clareza os potenciais clientes? SIM.</p>
+</blockquote></li>
+<li><blockquote>
+<p>(d) Será possível implantar uma estratégia de marketing e vendas exequível, em custo e retorno? SIM.</p>
+</blockquote></li>
+<li><blockquote>
+<p>(e) A janela da oportunidade está aberta? SIM.</p>
+</blockquote></li>
+</ul></li>
+<li><blockquote>
+<p><strong>Hipótese crítica e teste mais barato para validá-la</strong>:</p>
+</blockquote>
+<ul>
+<li><blockquote>
+<p><strong>Hipótese crítica</strong>: Sócios-administradores de MPEs B2B no DF compreendem a ameaça de perda de clientes pelo Simples Híbrido e aceitam contratar uma consultoria de transição por R$ 2.500,00 antes da janela fiscal de setembro de 2026.</p>
+</blockquote></li>
+<li><blockquote>
+<p><strong>Teste mais barato</strong>: Contato direto (ligação e e-mail executivo) direcionado a 50 gestores de MPEs do CNAE 8219-9 no DF, oferecendo um relatório preliminar gratuito de 1 página simulando a perda de crédito fiscal de seus 3 maiores clientes B2B.</p>
+</blockquote></li>
+<li><blockquote>
+<p><strong>Custo do teste</strong>: R$ 400,00 (despesas com comunicação, deslocamento para reuniões e material impresso) [ESTIMATIVA PRÓPRIA].</p>
+</blockquote></li>
+<li><blockquote>
+<p><strong>Prazo do teste</strong>: 15 dias úteis.</p>
+</blockquote></li>
+<li><blockquote>
+<p><strong>Critério objetivo de sucesso</strong>: Obtenção de pelo menos 10 relatórios gratuitos aceitos e fechamento contratual de no mínimo 2 consultorias pagas (taxa de conversão de 4% sobre a base total e 20% das reuniões).</p>
+</blockquote></li>
+</ul></li>
+<li><blockquote>
+<p><strong>O que pode não acontecer</strong>: O Comitê Gestor do Simples Nacional ou o Congresso Nacional adiarem os prazos de opção fiscal ou editarem norma que conceda crédito presumido automático integral aos adquirentes do Simples Puro, eliminando a vantagem do Simples Híbrido na cadeia B2B.</p>
+</blockquote></li>
+<li><blockquote>
+<p><strong>Fontes</strong>:</p>
+</blockquote>
+<ol type="1">
+<li><blockquote>
+<p>Presidência da República. Lei Complementar nº 214, de 16 de janeiro de 2025.</p>
+</blockquote></li>
+<li><blockquote>
+<p>Ministério da Fazenda / CGSN. Resolução CGSN nº 186, de 2026 e Resolução CGSN nº 190, de 2026.</p>
+</blockquote></li>
+<li><blockquote>
+<p>Receita Federal do Brasil / Oportunidados. Estatísticas de Empresas Ativas do Distrito Federal, base de outubro de 2026.</p>
+</blockquote></li>
+<li><blockquote>
+<p>SEBRAE. Guia Prático Reforma Tributária Pequenos Negócios - 2ª Edição, 2025/2026.</p>
+</blockquote></li>
+<li><blockquote>
+<p>SEBRAE. Observatório SEBRAE - Perfil Econômico do Distrito Federal, 2025.</p>
+</blockquote></li>
+</ol></li>
+<li><blockquote>
+<p><strong>Nível de confiança</strong>: ALTO. Fundamentado em mudanças legislativas obrigatórias com prazos regulatórios estipulados em resolução federal<sup>5</sup> e direcionado a um público mapeado de mais de 17 mil MEs no DF<sup>2</sup>.</p>
+</blockquote></li>
+</ol>
+<h5 id="o2-outsourcing-enxuto-de-faturamento-digital-e-emissão-automatizada-de-nota-fiscal-eletrônica-para-meis-do-df">O2 — Outsourcing Enxuto de Faturamento Digital e Emissão Automatizada de Nota Fiscal Eletrônica para MEIs do DF</h5>
+<ol type="1">
+<li><blockquote>
+<p><strong>Tendência de origem</strong>: A exigência legal de emissão universal de Nota Fiscal Eletrônica (NFS-e/NF-e) por Microempreendedores Individuais (MEIs) para todas as operações comerciais e de serviços a partir de 2027, instituída pela Reforma Tributária do Consumo [FATO] (Fonte: SEBRAE, Guia Prático Reforma Tributária Pequenos Negócios, 2025/2026)<sup>3</sup>. A nova regra elimina a isenção de emissão de notas fiscais nas vendas para Pessoas Físicas (B2C), exigindo escrituração digital de faturamento do pequeno negócio [FATO]<sup>3</sup>.</p>
+</blockquote></li>
+<li><blockquote>
+<p><strong>Oportunidade</strong>: A absoluta falta de tempo, baixa instrução digital e ausência de infraestrutura administrativa de milhares de MEIs no DF para emitir notas fiscais diariamente a cada prestação de serviço ou venda realizada ao consumidor final. O problema concreto envolve a perda de tempo produtivo da atividade-fim do empreendedor, o receio de autuações fiscais e o risco de desenquadramento compulsório do SIMEI por falta de escrituração do faturamento bruto acumulado [FATO]<sup>3</sup>. Cliente nomeável: Microempreendedor Individual (MEI) atuante em prestação de serviços diretos (cabeleireiros, estética, reparos, pequenos comércios e alimentação), situado nas Regiões Administrativas do DF (Ceilândia, Samambaia, Taguatinga e Plano Piloto). Decisor de compra: o próprio MEI.</p>
+</blockquote></li>
+<li><blockquote>
+<p><strong>Cinco perguntas de triagem</strong>:</p>
+</blockquote>
+<ul>
+<li><blockquote>
+<p><strong>Q1. Quem exatamente tem esse problema?</strong> Microempreendedores Individuais (MEI) ativos no Distrito Federal que realizam múltiplas vendas diárias ou semanais para Pessoas Físicas e Pessoas Jurídicas e passam a ser obrigados a emitir documento fiscal em 100% das operações a partir de 2027 [FATO]<sup>3</sup>.</p>
+</blockquote></li>
+<li><blockquote>
+<p><strong>Q2. Quanto dói?</strong> Gasto diário estimado de 1,5 a 2 horas de trabalho operacional do MEI preenchendo cadastros nos portais governamentais [ESTIMATIVA PRÓPRIA], além do risco iminente de autuações fiscais por omissão de receita e perda do enquadramento tributário simplificado do SIMEI [FATO]<sup>3</sup>.</p>
+</blockquote></li>
+<li><blockquote>
+<p><strong>Q3. Quem paga, e com que dinheiro?</strong> O próprio MEI, debitando a mensalidade do fluxo de caixa diário das suas vendas.</p>
+</blockquote></li>
+<li><blockquote>
+<p><strong>Q4. Por que você, e não o incumbente?</strong> Os escritórios de contabilidade do DF recusam a terceirização do faturamento diário de MEIs devido ao baixo valor de honorários em relação ao custo de mão de obra braçal. A solução proposta utiliza um modelo operacional ágil via aplicativo de mensagens (WhatsApp): o MEI envia os dados da venda por mensagem de texto ou áudio e um sistema automatizado (integrando ferramentas no-code e APIs de emissão de nota) processa e gera a NF-e em menos de 2 minutos. Copiar exige estruturar uma operação focada em escala e automação no-code.</p>
+</blockquote></li>
+<li><blockquote>
+<p><strong>Q5. Por que agora, e não em 2020 ou 2035?</strong> Até 2026, o MEI esteve legalmente dispensado de emitir NF para consumidor final Pessoa Física [FATO]<sup>3</sup>. A obrigatoriedade irrestrita entra em vigor em 2027 com a nova sistemática do IVA Dual [FATO]<sup>3</sup>. Em 2035 a rotina de emissão já estará estabilizada no cotidiano do pequeno empreendedor.</p>
+</blockquote></li>
+</ul></li>
+<li><blockquote>
+<p><strong>3Ms</strong>:</p>
+</blockquote>
+<ul>
+<li><blockquote>
+<p><strong>Demanda de mercado</strong>: MEIs do DF com elevado volume diário de vendas. Canais de acesso: campanhas de tráfego pago geolocalizadas (Meta Ads direcionados às Regiões Administrativas do DF), panfletagem em polos comerciais populares (Feiras Permanentes de Ceilândia e Taguatinga, Feira dos Importados) e parcerias com associações locais de microempreendedores. CAC estimado em R$ 45,00 por MEI assinado [ESTIMATIVA PRÓPRIA: R$ 900,00 investidos em anúncios para conversão de 20 assinantes], recuperado logo no primeiro mês de mensalidade.</p>
+</blockquote></li>
+<li><blockquote>
+<p><strong>Tamanho e estrutura</strong>: O Distrito Federal contabiliza 210.405 MEIs ativos, correspondendo a 44,19% do total de empresas ativas do DF [FATO] (Fonte: Receita Federal / Oportunidados, base de outubro de 2026, nominal, DF)<sup>2</sup>. Apenas na atividade de cabeleireiros, manicures e pedicures existem 16.696 MEIs, e no segmento de lanchonetes e casas de chá há 8.270 estabelecimentos ativos [FATO] (Fonte: Receita Federal / Oportunidados, base de outubro de 2026, nominal, DF)<sup>2</sup>. Mercado altamente pulverizado e sem competidores consolidados na emissão delegada de notas via mensagens. Estágio do ciclo de vida: introdução com curva de crescimento acelerado.</p>
+</blockquote></li>
+<li><blockquote>
+<p><strong>Análise de margem</strong>: Margem bruta estimada em 75,7% [ESTIMATIVA PRÓPRIA: Receita mensal do plano básico de R$ 99,00 subtraída do custo de API fiscal de R$ 15,00 e infraestrutura de servidores/WhatsApp de R$ 9,00 = R$ 75,00 de lucro bruto por cliente; Margem = (R$ 75,00 / R$ 99,00) × 100 = 75,7%]. Investimento inicial de R$ 18.000,00 (destinado ao fluxo de automação no-code, aquisição de computadores, registro da marca e reserva funcional). Ponto de equilíbrio atingido com 110 clientes ativos ou R$ 10.890,00 de faturamento recorrente mensal [ESTIMATIVA PRÓPRIA: Custos fixos operacionais de R$ 8.200,00 / Margem de contribuição por cliente de R$ 75,00 = 109,3 clientes].</p>
+</blockquote></li>
+</ul></li>
+<li><blockquote>
+<p><strong>Modelo de negócio</strong>: Assinatura mensal recorrente estruturada por pacotes de notas emitidas (Plano Básico: até 30 NFs/mês por R$ 79,00; Plano Intermediário: até 80 NFs/mês por R$ 129,00). O cliente paga pela comodidade e pela eliminação total do trabalho burocrático diário. Estrutura de custos: licenças de APIs de emissão de NF-e/NFS-e, servidores de automação, investimentos em tráfego pago e custos de suporte técnico.</p>
+</blockquote></li>
+<li><blockquote>
+<p><strong>Enquadramento nos modelos de negócio na web</strong>: Enquadra-se no modelo <strong>Empresarial (SaaS Enxuto / Service-as-a-Software)</strong>, utilizando ecossistema web e integrações via API para automatizar a prestação de serviços ao MEI. Não se enquadra em intermediação, propaganda, mercado virtual ou redes sociais, pois não funciona como intermediador de negócios nem vende anúncios.</p>
+</blockquote></li>
+<li><blockquote>
+<p><strong>Checklist final de Dornelas</strong>:</p>
+</blockquote>
+<ul>
+<li><blockquote>
+<p>(a) Existe um problema a ser resolvido? SIM.</p>
+</blockquote></li>
+<li><blockquote>
+<p>(b) Existe um produto ou serviço que solucionará esse problema? SIM.</p>
+</blockquote></li>
+<li><blockquote>
+<p>(c) É possível identificar com clareza os potenciais clientes? SIM.</p>
+</blockquote></li>
+<li><blockquote>
+<p>(d) Será possível implantar uma estratégia de marketing e vendas exequível, em custo e retorno? SIM.</p>
+</blockquote></li>
+<li><blockquote>
+<p>(e) A janela da oportunidade está aberta? SIM.</p>
+</blockquote></li>
+</ul></li>
+<li><blockquote>
+<p><strong>Hipótese crítica e teste mais barato para validá-la</strong>:</p>
+</blockquote>
+<ul>
+<li><blockquote>
+<p><strong>Hipótese crítica</strong>: MEIs do DF aceitam pagar uma mensalidade a partir de R$ 79,00 para terceirizar a emissão diária de notas fiscais via mensagem no WhatsApp para atender à exigência legal de 2027.</p>
+</blockquote></li>
+<li><blockquote>
+<p><strong>Teste mais barato</strong>: Veiculação de R$ 300,00 em anúncios geolocalizados no Instagram/Facebook focados nos bairros de Taguatinga e Ceilândia, direcionando o tráfego para uma página simples com vídeo demonstrativo de 40 segundos e botão de assinatura antecipada.</p>
+</blockquote></li>
+<li><blockquote>
+<p><strong>Custo do teste</strong>: R$ 300,00 (investimento exclusivo em mídia de anúncios) [ESTIMATIVA PRÓPRIA].</p>
+</blockquote></li>
+<li><blockquote>
+<p><strong>Prazo do teste</strong>: 7 dias corridos.</p>
+</blockquote></li>
+<li><blockquote>
+<p><strong>Critério objetivo de sucesso</strong>: Captação de no mínimo 25 pré-cadastros válidos de MEIs no WhatsApp manifestando intenção real de assinatura (taxa de conversão de cliques para cadastro superior a 8%).</p>
+</blockquote></li>
+</ul></li>
+<li><blockquote>
+<p><strong>O que pode não acontecer</strong>: A Receita Federal ou as Secretarias de Fazenda lançarem um aplicativo móvel gratuito e simplificado que permita a emissão de nota fiscal em um clique por comando de voz, reduzindo a dor operacional do MEI e eliminando a necessidade de terceirização.</p>
+</blockquote></li>
+<li><blockquote>
+<p><strong>Fontes</strong>:</p>
+</blockquote>
+<ol type="1">
+<li><blockquote>
+<p>SEBRAE. Guia Prático Reforma Tributária Pequenos Negócios - 2ª Edição, 2025/2026.</p>
+</blockquote></li>
+<li><blockquote>
+<p>Receita Federal do Brasil / Oportunidados. Estatísticas de Empresas Ativas do Distrito Federal, base de outubro de 2026.</p>
+</blockquote></li>
+<li><blockquote>
+<p>Presidência da República. Lei Complementar nº 214, de 16 de janeiro de 2025.</p>
+</blockquote></li>
+<li><blockquote>
+<p>SEBRAE. Observatório SEBRAE - Perfil Econômico do Distrito Federal, 2025.</p>
+</blockquote></li>
+</ol></li>
+<li><blockquote>
+<p><strong>Nível de confiança</strong>: ALTO. Apoiado pela dimensão de mais de 210 mil MEIs ativos no DF<sup>2</sup> que passam a enfrentar uma alteração regulatória e operacional compulsória a partir de 2027<sup>3</sup>.</p>
+</blockquote></li>
+</ol>
+<h5 id="o3-mentoria-enxuta-de-governança-de-dados-e-conformidade-à-lgpd-para-mpes-de-apoio-administrativo-no-df">O3 — Mentoria Enxuta de Governança de Dados e Conformidade à LGPD para MPEs de Apoio Administrativo no DF</h5>
+<ol type="1">
+<li><blockquote>
+<p><strong>Tendência de origem</strong>: A expansão da atuação fiscalizatória da Autoridade Nacional de Proteção de Dados (ANPD) sobre Agentes de Tratamento de Pequeno Porte, regulamentada pela Resolução CD/ANPD nº 2/2022 [FATO] (Fonte: ANPD, Resolução CD/ANPD nº 2/2022, 2022)<sup>9</sup>. Esse cenário é intensificado pela imposição de cláusulas contratuais rigorosas de compliance e segurança de dados exigidas por grandes tomadores de serviços do DF sobre seus fornecedores terceirizados de pequeno porte [FATO]<sup>9</sup>.</p>
+</blockquote></li>
+<li><blockquote>
+<p><strong>Oportunidade</strong>: Microempresas prestadoras de serviços corporativos e de apoio administrativo no DF manuseiam diariamente grandes volumes de dados pessoais de terceiros (cadastros de empregados, folhas de pagamento, relatórios fiscais e relatórios operacionais) sem mapeamento de processos ou governança de segurança. A dor específica envolve o risco concreto de rescisão de contratos B2B vigentes pela incapacidade de responder às auditorias de segurança da informação e questionários de compliance aplicados por clientes de médio e grande porte [FATO]<sup>9</sup>. Cliente nomeável: Microempresa (ME) prestadora de serviços combinados de escritório e apoio administrativo (CNAE 8211-3/00 e CNAE 8219-9/99), estabelecida nos polos operacionais do DF (SIA, SAAN, Asa Sul e Asa Norte). Decisor de compra: sócio-proprietário ou diretor de operações da ME.</p>
+</blockquote></li>
+<li><blockquote>
+<p><strong>Cinco perguntas de triagem</strong>:</p>
+</blockquote>
+<ul>
+<li><blockquote>
+<p><strong>Q1. Quem exatamente tem esse problema?</strong> Microempresas (ME) do Distrito Federal que prestam serviços terceirizados de suporte administrativo, gestão de documentos e apoio operacional para empresas de médio e grande porte, necessitando comprovar conformidade à LGPD para manterem seus contratos [FATO]<sup>2</sup>.</p>
+</blockquote></li>
+<li><blockquote>
+<p><strong>Q2. Quanto dói?</strong> Risco de cancelamento e rescisão compulsória de contratos B2B de prestação de serviços (com faturamento mensal recorrente no DF entre R$ 8.000,00 e R$ 20.000,00 por contrato) [ESTIMATIVA PRÓPRIA], somado ao risco de autuações administrativas e bloqueio do banco de dados por sanções da ANPD [FATO]<sup>9</sup>.</p>
+</blockquote></li>
+<li><blockquote>
+<p><strong>Q3. Quem paga, e com que dinheiro?</strong> O sócio-administrador da microempresa contratante, utilizando os recursos da conta corrente jurídica destinados à gestão de riscos e proteção de contratos.</p>
+</blockquote></li>
+<li><blockquote>
+<p><strong>Q4. Por que você, e não o incumbente?</strong> Grandes bancas jurídicas e consultorias especializadas em segurança da informação no DF praticam valores entre R$ 25.000,00 e R$ 60.000,00 para projetos de adequação, cobrando preços proibitivos para microempresas. A mentoria enxuta utiliza uma metodologia desenvolvida estritamente com base nos critérios flexibilizados da Resolução CD/ANPD nº 2/2022 (registros simplificados, dispensa de DPO e prazos estendidos) [FATO]<sup>9</sup>, entregando formulários, políticas e relatórios via templates digitais padronizados. Replicar essa atuação exige focar na norma simplificada para o pequeno porte.</p>
+</blockquote></li>
+<li><blockquote>
+<p><strong>Q5. Por que agora, e não em 2020 ou 2035?</strong> A Resolução CD/ANPD nº 2/2022 definiu o arcabouço normativo para o pequeno porte [FATO]<sup>9</sup>, e a intensidade fiscalizatória da ANPD no período recente (2024–2026) compeliu os grandes tomadores de serviços no DF a auditarem a cadeia de fornecedores terceirizados [FATO]<sup>9</sup>.</p>
+</blockquote></li>
+</ul></li>
+<li><blockquote>
+<p><strong>3Ms</strong>:</p>
+</blockquote>
+<ul>
+<li><blockquote>
+<p><strong>Demanda de mercado</strong>: MPEs do setor de serviços B2B no DF submetidas a exigências de compliance contratual. Canais de acesso: abordagem ativa via LinkedIn e telefone direcionada a sócios de MEs do DF e parcerias institucionais com sindicatos patronais do setor de serviços terceirizados (SEAC-DF). CAC estimado em R$ 420,00 por contrato [ESTIMATIVA PRÓPRIA: R$ 1.260,00 investidos em reuniões e prospecção direta para cada 3 contratos fechados], recuperado no recebimento da primeira parcela do projeto.</p>
+</blockquote></li>
+<li><blockquote>
+<p><strong>Tamanho e estrutura</strong>: No Distrito Federal, constam 6.930 empresas registradas no CNAE 8211-3/00 (Serviços combinados de escritório) e 10.949 MEs no CNAE 8219-9/99 (Serviços especializados de apoio administrativo) [FATO] (Fonte: Receita Federal / Oportunidados, base de outubro de 2026, nominal, DF)<sup>2</sup>, totalizando 17.879 estabelecimentos de apoio corporativo [FATO]<sup>2</sup>. Mercado pulverizado e desatendido por soluções jurídicas acessíveis. Estágio do ciclo de vida: crescimento motivado por pressão de compliance da cadeia B2B.</p>
+</blockquote></li>
+<li><blockquote>
+<p><strong>Análise de margem</strong>: Margem bruta estimada em 85% [ESTIMATIVA PRÓPRIA: Honorário do projeto de adequação enxuta de R$ 3.800,00 deduzido dos custos diretos de R$ 570,00 com certificados, deslocamento e emissão de documentos = R$ 3.230,00 de lucro bruto; Margem = (R$ 3.230,00 / R$ 3.800,00) × 100 = 85%]. Investimento inicial de R$ 15.000,00 (destinado ao acervo documental digital, ferramentas de armazenamento seguro em nuvem, identidade visual e capital de giro). Ponto de equilíbrio atingido com 2,5 projetos por mês ou R$ 9.500,00 em faturamento bruto mensal [ESTIMATIVA PRÓPRIA: Custos fixos operacionais de R$ 8.000,00 / Margem de contribuição unitária de R$ 3.230,00 = 2,47 projetos].</p>
+</blockquote></li>
+</ul></li>
+<li><blockquote>
+<p><strong>Modelo de negócio</strong>: Venda por projeto de mentoria enxuta (R$ 3.800,00 parcelados em 3 vezes) somada a um plano facultativo de auditoria e manutenção anual do mapa de dados (R$ 1.200,00/ano). O cliente paga para proteger seus contratos B2B vigentes e assegurar conformidade legal. Estrutura de custos: horas técnicas de mentoria, armazenamento em nuvem seguro e despesas comerciais de captação.</p>
+</blockquote></li>
+<li><blockquote>
+<p><strong>Enquadramento nos modelos de negócio na web</strong>: Enquadra-se no modelo <strong>Empresarial (B2B Consultancy Service)</strong>, suportado por formulários de auditoria digitalizados e repositórios seguros de documentação em nuvem. Não se enquadra em intermediação, propaganda, mercado virtual ou redes sociais por não operar como ecossistema de plataforma multilateral.</p>
+</blockquote></li>
+<li><blockquote>
+<p><strong>Checklist final de Dornelas</strong>:</p>
+</blockquote>
+<ul>
+<li><blockquote>
+<p>(a) Existe um problema a ser resolvido? SIM.</p>
+</blockquote></li>
+<li><blockquote>
+<p>(b) Existe um produto ou serviço que solucionará esse problema? SIM.</p>
+</blockquote></li>
+<li><blockquote>
+<p>(c) É possível identificar com clareza os potenciais clientes? SIM.</p>
+</blockquote></li>
+<li><blockquote>
+<p>(d) Será possível implantar uma estratégia de marketing e vendas exequível, em custo e retorno? SIM.</p>
+</blockquote></li>
+<li><blockquote>
+<p>(e) A janela da oportunidade está aberta? SIM.</p>
+</blockquote></li>
+</ul></li>
+<li><blockquote>
+<p><strong>Hipótese crítica e teste mais barato para validá-la</strong>:</p>
+</blockquote>
+<ul>
+<li><blockquote>
+<p><strong>Hipótese crítica</strong>: Gestores de MEs de apoio administrativo no DF recebem questionários de LGPD de seus tomadores de serviços e concordam em contratar uma mentoria de adequação enxuta por R$ 3.800,00.</p>
+</blockquote></li>
+<li><blockquote>
+<p><strong>Teste mais barato</strong>: Envio de um "Diagnóstico de Risco LGPD para Terceirizados B2B" em PDF para 40 diretores de MEs situadas no SIA e SAAN, seguido do agendamento de reuniões presenciais ou remotas de validação.</p>
+</blockquote></li>
+<li><blockquote>
+<p><strong>Custo do teste</strong>: R$ 250,00 (custos de comunicação e transporte para reuniões) [ESTIMATIVA PRÓPRIA].</p>
+</blockquote></li>
+<li><blockquote>
+<p><strong>Prazo do teste</strong>: 10 dias úteis.</p>
+</blockquote></li>
+<li><blockquote>
+<p><strong>Critério objetivo de sucesso</strong>: Agendamento de no mínimo 8 reuniões de apresentação e fechamento contratual de pelo menos 1 mentoria paga (conversão de 2,5% sobre a base prospectada).</p>
+</blockquote></li>
+</ul></li>
+<li><blockquote>
+<p><strong>O que pode não acontecer</strong>: A ANPD abrandar a exigência fiscalizatória sobre o setor privado ou os grandes tomadores de serviços no DF reduzirem a exigência de cláusulas de proteção de dados e governança sobre seus prestadores terceirizados.</p>
+</blockquote></li>
+<li><blockquote>
+<p><strong>Fontes</strong>:</p>
+</blockquote>
+<ol type="1">
+<li><blockquote>
+<p>Autoridade Nacional de Proteção de Dados (ANPD). Resolução CD/ANPD nº 2, de 27 de janeiro de 2022.</p>
+</blockquote></li>
+<li><blockquote>
+<p>Receita Federal do Brasil / Oportunidados. Estatísticas de Empresas Ativas do Distrito Federal, base de outubro de 2026.</p>
+</blockquote></li>
+<li><blockquote>
+<p>Governo do Distrito Federal / DODF. Diário Oficial do Distrito Federal - Publicações de Licenciamento, 2022.</p>
+</blockquote></li>
+<li><blockquote>
+<p>SEBRAE. Observatório SEBRAE - Perfil Econômico do Distrito Federal, 2025.</p>
+</blockquote></li>
+</ol></li>
+<li><blockquote>
+<p><strong>Nível de confiança</strong>: MÉDIO. Amparado por norma regulatória vigente e simplificada (Resolução CD/ANPD nº 2/2022)<sup>9</sup>, porém dependente da velocidade e escala da exigência contratual imposta pelas grandes tomadoras no DF.</p>
+</blockquote></li>
+</ol>
+<h4 id="ideias-descartadas-e-justificativa-do-filtro-de-corte">3. Ideias Descartadas e Justificativa do Filtro de Corte</h4>
+<p>A tabela a seguir apresenta as 12 ideias de negócios que foram eliminadas durante o processo de triagem do Checklist de Dornelas e aplicação dos filtros de recorte do projeto (Bloco 2 e Bloco 4):</p>
+<table>
+<colgroup>
+<col style="width: 25%"/>
+<col style="width: 25%"/>
+<col style="width: 25%"/>
+<col style="width: 25%"/>
+</colgroup>
+<thead>
+<tr class="header">
+<th><strong>Ideia do Mapeamento Inicial</strong></th>
+<th><strong>Pergunta do Checklist em que Falhou / Critério de Eliminação</strong></th>
+<th><strong>Resposta no Filtro</strong></th>
+<th><strong>Justificativa do Descarte</strong></th>
+</tr>
+<tr class="odd">
+<th><strong>04. SaaS de IA Generativa para Vendas</strong></th>
+<th>(d) Estratégia de Mkt exequível / Recorte</th>
+<th><strong>NÃO</strong></th>
+<th>Demanda suporte constante e alto CAC perante o varejo tradicional, gerando elevado cancelamento e inviabilizando o retorno no prazo.</th>
+</tr>
+<tr class="header">
+<th><strong>05. BPO Financeiro para Consultórios Médicos</strong></th>
+<th>(e) A janela da oportunidade está aberta?</th>
+<th><strong>NÃO</strong></th>
+<th>Serviço maturado no DF com elevada concorrência, sem alteração regulatória recente que abra espaço diferenciado a novos entrantes sem escala.</th>
+</tr>
+<tr class="odd">
+<th><strong>06. Software ERP em Nuvem para Microempresas</strong></th>
+<th>(d) Estratégia exequível / Recorte de tecnologia</th>
+<th><strong>NÃO</strong></th>
+<th>Violou a vedação do Bloco 2 por demandar desenvolvimento de tecnologia proprietária complexa e capital superior a R$ 50 mil.</th>
+</tr>
+<tr class="header">
+<th><strong>07. Consultoria em Incentivos Fiscais do DF</strong></th>
+<th>(a) Existe problema? / Recorte de incentivos</th>
+<th><strong>NÃO</strong></th>
+<th>Violou o Bloco 2 por depender diretamente de incentivos fiscais e licenças governamentais morosas para viabilizar a conta do cliente.</th>
+</tr>
+<tr class="odd">
+<th><strong>08. Agência de Marketing Digital Generalista</strong></th>
+<th>(d) Estratégia de Mkt exequível em custo e retorno</th>
+<th><strong>NÃO</strong></th>
+<th>Mercado saturado no DF, sem barreiras de entrada, com alto custo de aquisição de cliente (CAC) e ausência de diferencial competitivo.</th>
+</tr>
+<tr class="header">
+<th><strong>09. Licenciamento Ambiental para Indústrias do DF</strong></th>
+<th>(e) Janela aberta / Recorte de licenças demoradas</th>
+<th><strong>NÃO</strong></th>
+<th>Violou o Bloco 2 devido à dependência direta de processos de licenciamento ambiental morosos junto aos órgãos reguladores (IBRAM/DF).</th>
+</tr>
+<tr class="odd">
+<th><strong>10. Marketplace B2B Proprietário para Atacadistas</strong></th>
+<th>(d) Estratégia exequível / Recorte de tecnologia</th>
+<th><strong>NÃO</strong></th>
+<th>Violou o Bloco 2 ao exigir desenvolvimento de plataforma de software complexa e aporte financeiro incompatível com o teto de R$ 50 mil.</th>
+</tr>
+<tr class="header">
+<th><strong>11. Sanitização e Limpeza Comercial de Prédios</strong></th>
+<th>(e) A janela da oportunidade está aberta?</th>
+<th><strong>NÃO</strong></th>
+<th>Prestação de serviços operacionais comoditizada e matura, sem qualquer alteração legislativa ou tecnológica recente que abra a janela.</th>
+</tr>
+<tr class="odd">
+<th><strong>12. BPO de Cobrança Preventiva para o Varejo</strong></th>
+<th>(c) Identificar potenciais clientes com clareza</th>
+<th><strong>NÃO</strong></th>
+<th>Inadimplência pulverizada no varejo gera elevado custo de prospecção comercial e margens operacionais reduzidas para microempresas.</th>
+</tr>
+<tr class="header">
+<th><strong>13. Inventário Patrimonial Físico para Varejo</strong></th>
+<th>(a) Existe um problema a ser resolvido?</th>
+<th><strong>NÃO</strong></th>
+<th>Pequenos comércios no DF não demonstram disposição financeira para pagar por contagem física e etiquetagem de ativos de baixo valor.</th>
+</tr>
+<tr class="odd">
+<th><strong>14. Consultoria de Cardápio para Bares do DF</strong></th>
+<th>(d) Estratégia de Mkt exequível em custo e retorno</th>
+<th><strong>NÃO</strong></th>
+<th>Elevada taxa de mortalidade no setor de gastronomia do DF eleva o CAC e impede a manutenção de contratos de serviços recorrentes.</th>
+</tr>
+<tr class="header">
+<th><strong>15. Auditoria de eSocial para Construtoras</strong></th>
+<th>(e) A janela da oportunidade está aberta?</th>
+<th><strong>NÃO</strong></th>
+<th>O calendário inicial de implantação do eSocial foi concluído, sendo absorvido pelas contabilidades e empresas tradicionais de SST.</th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+<h4 id="ranking-final-das-oportunidades-aprovadas">4. Ranking Final das Oportunidades Aprovadas</h4>
+<table>
+<colgroup>
+<col style="width: 33%"/>
+<col style="width: 33%"/>
+<col style="width: 33%"/>
+</colgroup>
+<thead>
+<tr class="header">
+<th><strong>Posição</strong></th>
+<th><strong>Oportunidade Aprovada</strong></th>
+<th><strong>Justificativa Qualitativa de Posicionamento</strong></th>
+</tr>
+<tr class="odd">
+<th><strong>1º Lugar</strong></th>
+<th><strong>O1 — Consultoria de Transição do Simples Híbrido (IBS/CBS) no DF</strong></th>
+<th>Apresenta a maior urgência e maior ticket médio por projeto, alavancada pelo prazo regulatório fixado para setembro de 2026 com efeitos em 2027<sup>5</sup>.</th>
+</tr>
+<tr class="header">
+<th><strong>2º Lugar</strong></th>
+<th><strong>O2 — Outsourcing de Faturamento Digital e Emissão de NF-e para MEIs no DF</strong></th>
+<th>Possui o maior mercado potencial absoluto do DF (210 mil MEIs)<sup>2</sup> e modelo de receita recorrente gerado por obrigatoriedade fiscal universal<sup>3</sup>.</th>
+</tr>
+<tr class="odd">
+<th><strong>3º Lugar</strong></th>
+<th><strong>O3 — Mentoria Enxuta de Governança e LGPD para MPEs do DF</strong></th>
+<th>Apoiada por norma regulatória vigente e simplificada (Resolução CD/ANPD nº 2/2022)<sup>9</sup>, porém dependente da velocidade das auditorias de compliance do mercado.</th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+<h4 id="declaração-metodológica-e-parâmetros-de-pesquisa">5. Declaração Metodológica e Parâmetros de Pesquisa</h4>
+<p>O levantamento e a qualificação de dados executados nesta análise basearam-se em consultas aos repositórios oficiais e órgãos reguladores da administração pública brasileira. As pesquisas contemplaram as diretrizes da Reforma Tributária do Consumo (Lei Complementar nº 214/2025, Resoluções CGSN nº 186/2026 e nº 190/2026, Decreto nº 12.955/2026), as resoluções expedidas pela Autoridade Nacional de Proteção de Dados (Resolução CD/ANPD nº 2/2022) e os dados do SEBRAE Observatório e da Receita Federal do Brasil para o Distrito Federal relativos aos exercícios de 2025 e 2026<sup>1</sup>. Foi realizada busca na web nesta resposta e a data de corte do conhecimento adotada para a elaboração do relatório é outubro de 2026.</p>
+<h6 id="referências-citadas">Referências citadas</h6>
+<ol type="1">
+<li><blockquote>
+<p>Distrito Federal: Emprego, ocupações, empresas, dados, <a href="https://observatorio.sebrae.com.br/profile/geo/distrito-federal"><u>https://observatorio.sebrae.com.br/profile/geo/distrito-federal</u></a></p>
+</blockquote></li>
+<li><blockquote>
+<p>Existem 476.086 empresas ativas no Distrito Federal! - Oportunidados, <a href="https://oportunidados.com.br/empresas/distrito-federal"><u>https://oportunidados.com.br/empresas/distrito-federal</u></a></p>
+</blockquote></li>
+<li><blockquote>
+<p>Guia Prático Reforma Tributária Pequenos Negócios - Sebrae, <a href="https://sebrae.com.br/content/dam/portal-sebrae/na/pt/pdf/e-book/Guia_Pr%C3%A1tico_Reforma_Tribut%C3%A1ria_Pequenos_Neg%C3%B3cios_-_2%C2%AA_edi%C3%A7%C3%A3o.pdf"><u>https://sebrae.com.br/content/dam/portal-sebrae/na/pt/pdf/e-book/Guia_Pr%C3%A1tico_Reforma_Tribut%C3%A1ria_Pequenos_Neg%C3%B3cios_-_2%C2%AA_edi%C3%A7%C3%A3o.pdf</u></a></p>
+</blockquote></li>
+<li><blockquote>
+<p>d12955 - Planalto, <a href="https://www.planalto.gov.br/ccivil_03/_ato2023-2026/2026/decreto/d12955.htm"><u>https://www.planalto.gov.br/ccivil_03/_ato2023-2026/2026/decreto/d12955.htm</u></a></p>
+</blockquote></li>
+<li><blockquote>
+<p>CGSN atualiza regras do Simples Nacional para adequação à, <a href="https://www.gov.br/receitafederal/pt-br/assuntos/noticias/2026/agosto/cgsn-atualiza-regras-do-simples-nacional-para-adequacao-a-reforma-tributaria-do-consumo"><u>https://www.gov.br/receitafederal/pt-br/assuntos/noticias/2026/agosto/cgsn-atualiza-regras-do-simples-nacional-para-adequacao-a-reforma-tributaria-do-consumo</u></a></p>
+</blockquote></li>
+<li><blockquote>
+<p>Começou nesta terça (1º/09) o prazo para opção pelo Simples, <a href="https://www.gov.br/fazenda/pt-br/assuntos/noticias/2026/setembro/comecou-nesta-terca-1o-09-o-prazo-para-opcao-pelo-simples-nacional-e-para-a-escolha-do-modelo-de-recolhimento-do-ibs-e-da-cbs-em-2027"><u>https://www.gov.br/fazenda/pt-br/assuntos/noticias/2026/setembro/comecou-nesta-terca-1o-09-o-prazo-para-opcao-pelo-simples-nacional-e-para-a-escolha-do-modelo-de-recolhimento-do-ibs-e-da-cbs-em-2027</u></a></p>
+</blockquote></li>
+<li><blockquote>
+<p>Simples Nacional 2027 - Atenção aos novos prazos de opção, <a href="https://financas.montesclaros.mg.gov.br/comunicado/simples-nacional-2027-atencao-aos-novos-prazos-de-opcao"><u>https://financas.montesclaros.mg.gov.br/comunicado/simples-nacional-2027-atencao-aos-novos-prazos-de-opcao</u></a></p>
+</blockquote></li>
+<li><blockquote>
+<p>Prazos de opção — Portal do Simples Nacional, <a href="https://www8.receita.fazenda.gov.br/simplesnacional/noticias/NoticiaCompleta.aspx?id=c739e03c-8482-473f-8e82-f38ec3b13637"><u>https://www8.receita.fazenda.gov.br/simplesnacional/noticias/NoticiaCompleta.aspx?id=c739e03c-8482-473f-8e82-f38ec3b13637</u></a></p>
+</blockquote></li>
+<li><blockquote>
+<p>CATEGORIA DO TITULAR - Portal Gov.br, <a href="http://www.gov.br/anpd/pt-br/acesso-a-informacao/participacao-social/outras-acoes/documentos/ts_6_22_-contribuicoes.pdf/@@display-file/file"><u>http://www.gov.br/anpd/pt-br/acesso-a-informacao/participacao-social/outras-acoes/documentos/ts_6_22_-contribuicoes.pdf/@@display-file/file</u></a></p>
+</blockquote></li>
+<li><blockquote>
+<p><a href="https://pncp.gov.br/pncp-api/v1/orgaos/25523986000105/compras/2024/2/arquivos/1"><u>https://pncp.gov.br/pncp-api/v1/orgaos/25523986000105/compras/2024/2/arquivos/1</u></a></p>
+</blockquote></li>
+<li><blockquote>
+<p>Gabinete do Diretor Arthur Pereira Sabbat VOTO Nº 14/2023/DIR/AS, <a href="https://www.gov.br/anpd/pt-br/assuntos/deliberacoes-do-conselho-diretor/cds-ano-2023/cd-14-2023-votos.pdf/@@display-file/file"><u>https://www.gov.br/anpd/pt-br/assuntos/deliberacoes-do-conselho-diretor/cds-ano-2023/cd-14-2023-votos.pdf/@@display-file/file</u></a></p>
+</blockquote></li>
+</ol>
+</div></details>
+<details><summary>Anexo C — resposta da ferramenta C</summary><div class="annex"><p>## 1. Serviços especializados de apoio a pequenos empreendedores no acesso a compras públicas do GDF</p>
+<p>**Critérios de qualificação aplicados:**</p>
+<p>- *Capital*： até R$ 50 mil. Atendido. O negócio se baseia em conhecimento processual (editais, cadastros, documentação, precificação), com custo inicial concentrado em certificação digital (~R$ 235), registro empresarial (~R$ 295) e honorários contábeis iniciais . Não exige software proprietário.</p>
+<p>- *Porte*： 1–3 sócios. Atendido. Opera como firma de assessoria/consultoria, sem estrutura de capital intensivo.</p>
+<p>- *Tecnologia*： excluída tecnologia complexa. Atendido. O “produto” é serviço humano especializado.</p>
+<p>- *Barreira à entrada*： moderada. Exige domínio real da Lei 14.133/2021, dos portais de compras do GDF e dos regimes diferenciados para ME/EPP (LC 123/2006, arts. 42–49). Isso filtra aventureiros.</p>
+<p>- *Relevância para o cliente*： alta. O próprio GDF reconhece que “empresas locais perdem espaço para empresas de outros Estados no fornecimento de produtos e serviços” e que a “legislação pouco acessível e excesso de burocratização podem afastar as micro e pequenas empresas” das licitações . Existe meta institucional de ampliar a participação de MPEs locais nas compras do GDF .</p>
+<p>**Racional da oportunidade:**</p>
+<p>O mercado-alvo são MEs e EPPs do DF que querem vender para o GDF mas não têm departamento de licitações nem tempo para dominar editais, cadastros (SICAF, CDF, Certificados), recursos administrativos e gestão contratual. O serviço cobre: leitura estratégica de editais, preparação documental, precificação em planilha, suporte a recursos, orientação sobre consórcios e compras compartilhadas.</p>
+<p>O crescimento de “Preparação de documentos e serviços especializados de apoio administrativo” e “Serviços combinados de escritório e apoio administrativo” entre as CNAEs que mais abrem empresas no DF indica que há demanda, mas também sinaliza risco de muitos ofertantes genéricos. A diferenciação defensável é especialização vertical em compras públicas do GDF — algo que um contador generalista ou um escritório de apoio administrativo não entrega com profundidade.</p>
+<p>**Estrutura de operação viável (1–3 sócios):**</p>
+<p>1 sócio responsável pela inteligência de editais e precificação; 1 sócio responsável pela operação documental e cadastral; 1 sócio opcional para gestão de contratos e acompanhamento pós-vitória. Honorários por contrato assinado ou mensalidade de retainer. Capital de giro para primeiros 6 meses: viável dentro de R$ 50 mil.</p>
+<p>**Risco principal:** dependência de fluxo de novas licitações e ciclos de contratação pública. Mitigação: complementar receita com serviço de *compliance* para empresas que já fornecem ao GDF (renovação de certidões, manutenção de cadastros, prestação de contas).</p>
+<p>---</p>
+<p>## 2. Preparação e intermediação de MPEs do DF para exportação de serviços e produtos de baixa complexidade</p>
+<p>**Critérios de qualificação aplicados:**</p>
+<p>- *Capital*： até R$ 50 mil. Atendido. O negócio vende *capabilidade de exportação*, não produto.</p>
+<p>- *Porte*： 1–3 sócios. Atendido.</p>
+<p>- *Tecnologia*： sem tecnologia proprietária. Ferramentas disponíveis: portais ApexBrasil, Sebrae, Siscomex, plataformas de logística internacional.</p>
+<p>- *Fonte de demanda*： o DF tem a maior proporção de serviços entre pequenos negócios do país — 62,7% dos MEIs e MEs com CNPJ ativo no 4º trimestre de 2025 . A economia é intensiva em conhecimento. Já existem casos de pequenas empresas do DF que se tornaram exportadoras com apoio da ApexBrasil .</p>
+<p>- *Barreira à entrada*： moderada-alta. Exige conhecimento real de *Incoterms*, classificação fiscal (NCM), habilitação no RADAR/Siscomex, logística internacional e regimes aduaneiros especiais (drawback, RECOF). Isso é o filtro.</p>
+<p>**Racional da oportunidade:**</p>
+<p>O PROFEX-DF (Programa de Fomento à Exportação do DF) está em tramitação e prevê articulação com Sebrae-DF, SEDET e ApexBrasil para capacitar pequenos negócios do DF em comércio exterior . A LC 216/2025 garante devolução de até 3% do valor exportado para MPEs do Simples Nacional, corrigindo uma distorção histórica .</p>
+<p>A oportunidade não é *competir com o Sebrae* em capacitação, mas *executar a ponta operacional* que o pequeno empresário não executa: fazer a habilitação no Siscomex, cotar frete e seguro internacional, preparar documentação (invoice, packing list, certificado de origem), coordenar despachante aduaneiro e acompanhar o embarque. O Sebrae treina; este serviço *faz junto*.</p>
+<p>Foco inicial: serviços exportáveis (design, TI, audiovisual, arquitetura, *freelancers* especializados) e produtos de baixa complexidade (artesanato com identidade do Cerrado, alimentos não perecíveis, cosméticos com certificação) que não exijam cadeia fria nem certificações sanitárias pesadas. O edital do Sebrae/DF para cooperativa de design com foco internacional já sinaliza demanda por estruturação exportadora .</p>
+<p>**Risco principal:** volume inicial baixo de clientes. Mitigação: modelo de *fee por projeto* (não retainer), com ticket médio de R$ 2.000–5.000 por operação de exportação assistida, complementado por consultoria de *pricing* internacional e inteligência de mercado.</p>
+<p>---</p>
+<p>## 3. Serviços técnicos de conformidade para pequenas empresas que fornecem à cadeia de data centers e infraestrutura digital em expansão no DF</p>
+<p>**Critérios de qualificação aplicados:**</p>
+<p>- *Capital*： até R$ 50 mil. Atendido. Serviço de avaliação e documentação, não de engenharia pesada.</p>
+<p>- *Porte*： 1–3 sócios. Atendido.</p>
+<p>- *Tecnologia*： sem tecnologia proprietária. Normas públicas (ABNT, ISO, regulamentos de eficiência energética e segurança elétrica).</p>
+<p>- *Fonte de demanda*： o Brasil está em ciclo de investimento em data centers. A procura por conexão à rede elétrica para projetos de data center atingiu 12 GW em pedidos, com 8 GW já com parecer de viabilidade e mais de 2 GW com contratos de transmissão assinados . Cada projeto de 1 GW movimenta cerca de US$ 100 milhões em investimento . A cadeia de fornecedores locais para obra, manutenção predial, segurança, limpeza técnica e suporte elétrico se expande em torno disso.</p>
+<p>- *Barreira à entrada*： moderada. Exige conhecimento de normas técnicas e capacidade de elaborar documentação de conformidade. Não é tecnologia patenteável, mas é conhecimento regulatório.</p>
+<p>**Racional da oportunidade:**</p>
+<p>Data centers demandam fornecedores locais com documentação de conformidade em ordem: laudos elétricos, certificações de segurança, *compliance* trabalhista e ambiental para credenciamento como fornecedor. Pequenas empresas do DF que prestam serviços de instalação elétrica, manutenção predial, segurança e logística técnica não têm estrutura interna para manter essa documentação atualizada.</p>
+<p>A oportunidade é um serviço de *conformidade como serviço*: manter a documentação regulatória e de segurança dos clientes MPE atualizada, preparar *dossiês* de credenciamento para grandes contratantes, e assessorar em auditorias de *compliance* de fornecedores. O DF concentra a sede de órgãos reguladores, o que facilita acesso a normas e atualizações.</p>
+<p>**Risco principal:** o ciclo de data centers pode não se materializar integralmente no DF (a maioria dos projetos está em SP, CE e BA). Mitigação: o serviço é replicável para qualquer cadeia que exija conformidade documental de fornecedores pequenos — não fica restrito a data centers.</p>
+<p>---</p>
+<p>## 4. Estruturação e gestão de consórcios de MPEs para prestação de serviços técnicos ao setor público do DF</p>
+<p>**Critérios de qualificação aplicados:**</p>
+<p>- *Capital*： até R$ 50 mil. Atendido.</p>
+<p>- *Porte*： 1–3 sócios. Atendido.</p>
+<p>- *Tecnologia*： sem tecnologia proprietária.</p>
+<p>- *Barreira à entrada*： alta. Exige conhecimento jurídico de consórcios (Lei 14.133/2021, art. 15; Lei 6.404/76, arts. 278–279), capacidade de orquestrar interesses divergentes entre empresas e domínio de editais que admitem consórcio.</p>
+<p>- *Demanda*： o GDF tem meta de ampliar participação de MPEs locais nas compras . Consórcios são o mecanismo legal para que pequenas empresas atendam lotes maiores que individualmente não conseguiriam.</p>
+<p>**Racional da oportunidade:**</p>
+<p>Pequenas empresas do DF perdem licitações de serviços técnicos (manutenção predial, TI, eventos, segurança, limpeza especializada) porque não atingem os requisitos de qualificação técnica ou econômica individualmente. O consórcio resolve isso, mas poucas MPEs têm quem estruture o consórcio: constituição jurídica, definição de liderança, rateio de responsabilidades, gestão do contrato e distribuição de pagamentos.</p>
+<p>O negócio é uma *gestora de consórcios de MPEs*: identifica editais compatíveis, recruta empresas complementares, estrutura o consórcio, gerencia a proposta conjunta e, se vencedor, administra o contrato rateando receitas e responsabilidades. A remuneração vem de *fee* de estruturação + percentual de administração sobre o contrato.</p>
+<p>**Risco principal:** complexidade relacional. Sócios e empresas consorciadas podem ter conflitos de interesse. Mitigação: contratos internos bem redigidos e atuação como *manager*, não como sócia do consórcio.</p>
+<p>---</p>
+<p>## 5. Back-office técnico especializado para escritórios de advocacia e contabilidade do DF</p>
+<p>**Critérios de qualificação aplicados:**</p>
+<p>- *Capital*： até R$ 50 mil. Atendido.</p>
+<p>- *Porte*： 1–3 sócios. Atendido.</p>
+<p>- *Tecnologia*： sem tecnologia proprietária. Uso de ferramentas existentes.</p>
+<p>- *Barreira à entrada*： moderada. Exige especialização em um *nicho* processual ou documental, não apenas trabalho administrativo genérico.</p>
+<p>- *Demanda*： “Serviços advocatícios” estão entre as CNAEs que mais abrem empresas no DF . Mais escritórios pequenos significam mais demanda por suporte técnico externo.</p>
+<p>**Racional da oportunidade:**</p>
+<p>Escritórios de advocacia e contabilidade de 1–5 profissionais no DF têm carga operacional crescente (prazos, protocolos eletrônicos, due diligence documental, organização de processos, compliance de clientes) mas não justificam contratar um profissional dedicado para cada função. O serviço é oferecer *horas técnicas especializadas* sob demanda: montagem de dossiês para due diligence, organização e indexação de processos, preparação de documentos para protocolo em sistemas (PJe, SEI, e-Proc), triagem documental para compliance trabalhista e fiscal.</p>
+<p>A diferenciação em relação a “serviços de apoio administrativo” genérico é o conhecimento do *sistema* (PJe, SEI, portais de tribunais, sistemas de contabilidade) e da lógica processual. Não é secretariado; é suporte técnico.</p>
+<p>**Risco principal:** confidencialidade e sigilo profissional. Mitigação: contratos de confidencialidade robustos e segmentação de acesso.</p>
+<p>---</p>
+<p>## 6. Assessoria de adequação à Reforma Tributária do Consumo para pequenas empresas do setor de serviços do DF</p>
+<p>**Critérios de qualificação aplicados:**</p>
+<p>- *Capital*： até R$ 50 mil. Atendido. Serviço de conhecimento.</p>
+<p>- *Porte*： 1–3 sócios. Atendido.</p>
+<p>- *Tecnologia*： sem tecnologia proprietária.</p>
+<p>- *Barreira à entrada*： alta. Exige domínio real do novo sistema de IBS/CBS, das regras de transição, dos regimes diferenciados e dos impactos sobre a formação de preços em empresas de serviços. A maioria dos contadores está sobrecarregada ou não domina a profundidade necessária.</p>
+<p>- *Urgência*： a Reforma Tributária é “um marco significativo” para o varejo e serviços do DF . Empresas precisam reprecificar, revisar contratos e ajustar regimes de tributação ao longo do período de transição.</p>
+<p>**Racional da oportunidade:**</p>
+<p>MEs e EPPs de serviços no DF vão precisar, entre 2027 e 2030, de: revisão de precificação (o *split payment* muda o fluxo de caixa), adaptação de contratos vigentes, avaliação de regimes diferenciados (saúde, educação, profissões regulamentadas), e simulações de carga tributária. Contadores generalistas fazem a obrigação acessória; este serviço faz a *decisão de negócio*.</p>
+<p>O produto é uma consultoria de *impacto tributário aplicado*: diagnóstico de exposição à nova carga, simulação de preços com IBS/CBS, revisão de contratos e treinamento da equipe administrativa do cliente. Ticket médio viável: R$ 3.000–8.000 por projeto de adequação.</p>
+<p>**Risco principal:** a regulamentação ainda está em construção até 2026–2027. Mitigação: o serviço começa com *diagnóstico de exposição* e ajusta o escopo conforme as regras se consolidam. A própria incerteza é parte da demanda.</p>
+<p>---</p>
+<p>**Filtro de corte aplicado a todas as seis oportunidades:** nenhuma depende de tecnologia proprietária complexa; todas cabem em 1–3 sócios com capital ≤ R$ 50 mil; todas têm demanda identificável no DF com base em dados públicos de crescimento de serviços, abertura de empresas e políticas de fomento locais; todas enfrentam um mercado com oferta genérica mas carente de especialização vertical.</p>
+</div></details>
+<details><summary>Anexo D — síntese produzida pela quarta IA</summary><div class="annex"><span class="filled">A síntese integral da quarta IA não foi anexada como arquivo separado. O HTML contém partes da síntese e da verificação de fontes, mas não é possível reconstruir com segurança o texto integral ausente. Para concluir essa parte sem inventar conteúdo, inserir o PDF ou a transcrição completa da quarta IA.</span></div></details>
+</section></main></div>
+<footer>ADM0150 Criação de Negócios, UnB, 2026.2</footer>
+<script>
+function show(){var id=(location.hash||'#abertura').slice(1);if(!document.getElementById(id))id='abertura';
+document.querySelectorAll('.pg').forEach(function(s){s.classList.toggle('on',s.id===id)});
+document.querySelectorAll('nav.side a').forEach(function(a){a.classList.toggle('on',a.dataset.s===id)});window.scrollTo(0,0)}
+window.addEventListener('hashchange',show);show();
+</script></body></html>
